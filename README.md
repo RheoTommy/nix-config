@@ -1,119 +1,177 @@
-# NixOS Home Manager Configuration
+# NixOS と Home Manager の設定用 Flake
 
-This repository contains a modular Home Manager configuration for NixOS that can also be accessed from other operating systems. It is designed to be simple yet extensible, making it easy to add or modify configurations as needed.
+このリポジトリは、NixOS のシステム設定と Home Manager のユーザー設定を管理するための Flake です。NixOS と Home Manager の両方を独立して利用することができます。
 
-## Structure
-
-The configuration is organized as follows:
+## リポジトリの構造
 
 ```
 .
-├── flake.nix              # Entry point for the configuration
-├── home
-│   └── default.nix        # Base home-manager configuration
-├── hosts
-│   └── nixos.nix          # NixOS-specific configurations
-└── modules
-    ├── core               # Essential configurations for all environments
-    ├── desktop            # Desktop environments and GUI applications
-    ├── development        # Development environments and tools
-    ├── editors            # Text editors and IDEs
-    └── shell              # Shells and terminal utilities
+├── flake.nix                  # メインの Flake 設定ファイル
+├── home                       # Home Manager の設定
+│   └── rheotommy              # ユーザー rheotommy の設定
+│       └── default.nix        # rheotommy の Home Manager 設定
+└── hosts                      # NixOS ホストの設定
+    ├── hardware.nix           # 共通ハードウェア設定
+    └── nixos-desktop          # nixos-desktop ホストの設定
+        └── default.nix        # nixos-desktop の NixOS 設定
 ```
 
-## Getting Started
+### 主要なファイル
 
-### Prerequisites
+- **flake.nix**: リポジトリのエントリーポイントです。NixOS と Home Manager の設定をエクスポートします。
+- **hosts/nixos-desktop/default.nix**: nixos-desktop ホストの NixOS システム設定です。
+- **hosts/hardware.nix**: ハードウェア固有の設定（ファイルシステム、カーネルモジュールなど）です。
+- **home/rheotommy/default.nix**: ユーザー rheotommy の Home Manager 設定です。
 
-- [Nix](https://nixos.org/download.html) with flakes enabled
-- [Home Manager](https://github.com/nix-community/home-manager)
+## 使い方
 
-### Installation
+### 前提条件
 
-1. Clone this repository:
+- NixOS がインストールされていること
+- Flakes が有効化されていること（`nix.settings.experimental-features = [ "nix-command" "flakes" ];`）
+
+### リポジトリのクローン
 
 ```bash
 git clone https://github.com/yourusername/nix-config.git
 cd nix-config
 ```
 
-2. Modify the example configuration in `flake.nix` to match your username and home directory:
+### NixOS の設定を適用する
 
-```
-homeConfigurations = {
-  "yourusername@hostname" = mkHomeConfiguration {
-    system = "x86_64-linux"; # Change to your system architecture
-    username = "yourusername";
-    homeDirectory = "/home/yourusername";
-    extraModules = [
-      ./hosts/nixos.nix # Or another host configuration
-    ];
-  };
-};
-```
-
-3. Apply the configuration:
+このリポジトリの NixOS 設定を適用するには、以下のコマンドを実行します：
 
 ```bash
-home-manager switch --flake .#yourusername@hostname
+# リポジトリのルートディレクトリで実行
+sudo nixos-rebuild switch --flake .#nixos-desktop
 ```
 
-## Usage
+ここで `nixos-desktop` は flake.nix で定義されたホスト名です。別のホストを追加した場合は、そのホスト名を指定します。
 
-### Enabling Modules
+### Home Manager の設定を適用する
 
-To enable a module, uncomment its import in `home/default.nix`:
+#### NixOS の一部として Home Manager を使用する場合
 
-```
-imports = [
-  # Core modules
-  ../modules/core
+NixOS の設定を適用すると、Home Manager の設定も自動的に適用されます：
 
-  # Optional modules
-  ../modules/shell
-  ../modules/editors
-  # ../modules/desktop
-  # ../modules/development
-];
+```bash
+sudo nixos-rebuild switch --flake .#nixos-desktop
 ```
 
-### Customizing Modules
+#### スタンドアロンの Home Manager として使用する場合
 
-Each module directory contains a `default.nix` file that imports submodules. To enable a submodule, uncomment its import in the module's `default.nix` file.
+Home Manager をスタンドアロンで使用する場合（NixOS 以外の Linux ディストリビューションや、別の NixOS システムなど）：
 
-For example, to enable the Neovim configuration in the `editors` module:
-
-```
-# In modules/editors/default.nix
-imports = [
-  # Uncomment as needed
-  # ./vim.nix
-  ./neovim.nix
-  # ./emacs.nix
-  # ./vscode.nix
-];
+```bash
+# リポジトリのルートディレクトリで実行
+home-manager switch --flake .#rheotommy@nixos-desktop
 ```
 
-### Adding New Configurations
+ここで `rheotommy@nixos-desktop` は `ユーザー名@ホスト名` の形式です。
 
-To add a new configuration:
+## 設定の更新方法
 
-1. Create a new `.nix` file in the appropriate module directory
-2. Add your configuration to the file
-3. Import the file in the module's `default.nix` file
+### NixOS の設定を更新する
 
-## Using from Other Operating Systems
+1. 設定ファイルを編集します（例：`hosts/nixos-desktop/default.nix`）
+2. 変更を適用します：
 
-This configuration can be used on non-NixOS systems by installing Nix and Home Manager, then following the installation instructions above. The flake.nix file includes configurations for multiple systems, including Linux and macOS.
+```bash
+sudo nixos-rebuild switch --flake .#nixos-desktop
+```
 
-## Extending the Configuration
+### Home Manager の設定を更新する
 
-The modular structure makes it easy to extend the configuration:
+1. 設定ファイルを編集します（例：`home/rheotommy/default.nix`）
+2. 変更を適用します：
 
-1. Add new modules in the `modules` directory
-2. Create new host-specific configurations in the `hosts` directory
-3. Modify existing modules to add or change configurations
+```bash
+# NixOS の一部として Home Manager を使用している場合
+sudo nixos-rebuild switch --flake .#nixos-desktop
 
-## License
+# または、スタンドアロンの Home Manager として使用している場合
+home-manager switch --flake .#rheotommy@nixos-desktop
+```
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 新しいホストの追加方法
+
+新しいホストを追加するには：
+
+1. `hosts/` ディレクトリに新しいホスト用のディレクトリを作成します：
+   ```bash
+   mkdir -p hosts/new-host
+   ```
+
+2. 新しいホストの設定ファイルを作成します：
+   ```bash
+   # 基本的な設定を生成（オプション）
+   nixos-generate-config --dir hosts/new-host
+   # または既存の設定をコピーして編集
+   cp hosts/nixos-desktop/default.nix hosts/new-host/
+   ```
+
+3. `flake.nix` を編集して新しいホストを追加します：
+   ```text
+   nixosConfigurations."new-host" = nixpkgs.lib.nixosSystem {
+     inherit system;
+     inherit specialArgs;
+     modules = [
+       ./hosts/new-host/default.nix
+       # その他のモジュール
+     ];
+   };
+   ```
+
+## 新しいユーザーの追加方法
+
+新しいユーザーを追加するには：
+
+1. `home/` ディレクトリに新しいユーザー用のディレクトリを作成します：
+   ```bash
+   mkdir -p home/newuser
+   ```
+
+2. 新しいユーザーの Home Manager 設定ファイルを作成します：
+   ```bash
+   cp home/rheotommy/default.nix home/newuser/
+   # 設定を編集して新しいユーザーに合わせます
+   ```
+
+3. `flake.nix` の Home Manager 設定を編集して新しいユーザーを追加します：
+   ```text
+   home-manager = {
+     # 既存の設定...
+     users."newuser" = import ./home/newuser/default.nix;
+   };
+   ```
+
+## トラブルシューティング
+
+### ビルドエラーが発生する場合
+
+設定に問題がある場合は、まずドライランを実行して詳細なエラーメッセージを確認します：
+
+```bash
+# NixOS の場合
+nixos-rebuild build --flake .#nixos-desktop
+
+# Home Manager の場合
+home-manager build --flake .#rheotommy@nixos-desktop
+```
+
+### 以前の設定に戻す
+
+問題が発生した場合は、以前の世代に戻すことができます：
+
+```bash
+# NixOS の場合
+sudo nixos-rebuild switch --rollback
+
+# Home Manager の場合
+home-manager generations
+home-manager switch --generation X  # X は世代番号
+```
+
+## ライセンス
+
+このリポジトリは [MIT ライセンス](LICENSE) の下で公開されています。
