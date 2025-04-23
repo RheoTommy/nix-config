@@ -14,15 +14,21 @@
         let
             system = "x86_64-linux";
             username = "rheotommy";
+
+            hostsDir = (builtins.readDir ./hosts);
+            hosts = builtins.filter (name: hostsDir.${name} == "directory") (builtins.attrNames hostsDir);
+            mkNixosSystem = hostName: inputs.nixpkgs.lib.nixosSystem {
+                inherit system;
+                modules = [
+                    ./hosts/${hostName}
+                ];
+                specialArgs = { inherit username hostName inputs; };
+            };
         in
             {
-                nixosConfigurations = {
-                    virtualbox = inputs.nixpkgs.lib.nixosSystem {
-                        system = system;
-                        modules = [
-                            ./hosts/virtualbox
-                        ];
-                    };
-                };
+                nixosConfigurations = builtins.listToAttrs (builtins.map (hostName: {
+                    name = hostName;
+                    value = mkNixosSystem hostName;
+                }) hosts);
             };
 }
