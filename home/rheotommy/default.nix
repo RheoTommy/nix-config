@@ -9,7 +9,11 @@
 
 {
   imports = [
+    ../../modules/home-manager/apps
+    ../../modules/home-manager/browser
     ../../modules/home-manager/git
+    ../../modules/home-manager/vscode
+    ../../modules/home-manager/zsh
   ];
 
   home = {
@@ -39,13 +43,6 @@
   # Packages installed for this user only
   home.packages = with pkgs; [
     vscode # Visual Studio Code
-    eza # Modern replacement for 'ls'
-
-    # Add other user-specific packages here
-    # Example:
-    # neovim
-    # tmux
-    # htop
   ];
 
   # Environment variables for the user session
@@ -58,42 +55,6 @@
   #   ll = "eza -l";
   #   la = "eza -la";
   # };
-
-  # --- Program Configurations ---
-
-  # Git configuration (example, customize as needed)
-  programs.git = {
-    enable = true;
-    userName = "rheotommy"; # Replace with your actual Git username
-    userEmail = "tommyrheo@gmail.com"; # Replace with your actual Git email
-    extraConfig = {
-      init.defaultBranch = "main";
-    };
-  };
-
-  # Starship prompt configuration (if used in user's shell)
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true; # If using Zsh
-    # settings = { ... }; # Custom starship settings
-  };
-
-  # Zsh configuration (if Zsh is the user's shell)
-  programs.zsh = {
-    enable = true;
-    enableAutosuggestions = true;
-    enableCompletion = true;
-    syntaxHighlighting.enable = true;
-    # oh-my-zsh = {
-    #   enable = true;
-    #   plugins = [ "git" ];
-    #   theme = "robbyrussell";
-    # };
-    # initExtra = ''
-    #   # Custom Zsh settings
-    #   bindkey -e
-    # '';
-  };
 
   # VSCode configuration (example)
   # programs.vscode = {
