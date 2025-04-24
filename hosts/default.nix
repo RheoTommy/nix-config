@@ -3,6 +3,7 @@
 {
     imports = [
         ../modules/nixos/bootloader
+        ../modules/nixos/docker
         ../modules/nixos/fonts
         ../modules/nixos/graphics
         ../modules/nixos/i18n
