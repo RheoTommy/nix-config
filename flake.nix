@@ -32,5 +32,18 @@
                     name = hostName;
                     value = mkNixosSystem hostName;
                 }) hosts);
+
+                homeConfigurations = {
+                    home = inputs.home-manager.lib.homeManagerConfiguration {
+                        pkgs = import inputs.nixpkgs {
+                            inherit system;
+                            config.allowUnfree = true;
+                        };
+                        extraSpecialArgs = { inherit username inputs; };
+                        modules = [
+                            ./home/${username}
+                        ];
+                    };
+                };
             };
 }

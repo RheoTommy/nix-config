@@ -1,6 +1,6 @@
 { lib, ... }:
 
 {
-    # Enable OpenGL
-    hardware.graphics.enable = lib.mkDefault true;
+  # Enable OpenGL
+  hardware.graphics.enable = lib.mkDefault true;
 }

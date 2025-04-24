@@ -1,19 +1,15 @@
-# Home Manager configuration for user 'rheotommy'
-{ config, pkgs, inputs, lib, ... }: # flake.nix の hmSpecialArgs (extraSpecialArgs) で渡されたものが利用可能
+{ config, pkgs, inputs, lib, username, ... }:
 
 {
-  # --- 基本設定 ---
   home = {
-    username = "rheotommy";
-    homeDirectory = "/home/rheotommy"; # Ensure this matches the actual home directory
-
-    # Set state version for compatibility. Do not change unless necessary.
-    stateVersion = "24.11"; # Matches the original config
+    inherit username;
+    homeDirectory = "/home/${username}";
+    programs.home-manager.enable = true;
 
     # Packages installed for this user only
     packages = with pkgs; [
       vscode # Visual Studio Code
-      eza    # Modern replacement for 'ls'
+      eza # Modern replacement for 'ls'
 
       # Add other user-specific packages here
       # Example:
@@ -86,4 +82,7 @@
   #   ../../modules/home-manager/base.nix
   #   ../../modules/home-manager/cli-tools.nix
   # ];
+
+  # Set state version for compatibility. Do not change unless necessary.
+  stateVersion = "24.11";
 }
