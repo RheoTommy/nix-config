@@ -1,4 +1,11 @@
-{ config, pkgs, inputs, qqqlib, username, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  qqqlib,
+  username,
+  ...
+}:
 
 {
   imports = [
@@ -10,33 +17,31 @@
     homeDirectory = "/home/${username}";
     programs.home-manager.enable = true;
 
-    xdg.userDirs =
-      {
-        enable = true;
-        createDirectories = true;
+    xdg.userDirs = {
+      enable = true;
+      createDirectories = true;
 
-        desktop = "$HOME/Desktop";
-        documents = "$HOME/Documents";
-        download = "$HOME/Downloads";
-        music = "$HOME/Music";
-        pictures = "$HOME/Pictures";
-        publicShare = "$HOME/Public";
-        templates = "$HOME/Templates";
-        videos = "$HOME/Videos";
-      };
+      desktop = "$HOME/Desktop";
+      documents = "$HOME/Documents";
+      download = "$HOME/Downloads";
+      music = "$HOME/Music";
+      pictures = "$HOME/Pictures";
+      publicShare = "$HOME/Public";
+      templates = "$HOME/Templates";
+      videos = "$HOME/Videos";
+    };
 
     # Packages installed for this user only
-    packages = with pkgs;
-      [
-        vscode # Visual Studio Code
-        eza # Modern replacement for 'ls'
+    packages = with pkgs; [
+      vscode # Visual Studio Code
+      eza # Modern replacement for 'ls'
 
-        # Add other user-specific packages here
-        # Example:
-        # neovim
-        # tmux
-        # htop
-      ];
+      # Add other user-specific packages here
+      # Example:
+      # neovim
+      # tmux
+      # htop
+    ];
 
     # Environment variables for the user session
     # sessionVariables = {
