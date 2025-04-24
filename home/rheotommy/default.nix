@@ -10,17 +10,33 @@
     homeDirectory = "/home/${username}";
     programs.home-manager.enable = true;
 
-    # Packages installed for this user only
-    packages = with pkgs; [
-      vscode # Visual Studio Code
-      eza # Modern replacement for 'ls'
+    xdg.userDirs =
+      {
+        enable = true;
+        createDirectories = true;
 
-      # Add other user-specific packages here
-      # Example:
-      # neovim
-      # tmux
-      # htop
-    ];
+        desktop = "$HOME/Desktop";
+        documents = "$HOME/Documents";
+        download = "$HOME/Downloads";
+        music = "$HOME/Music";
+        pictures = "$HOME/Pictures";
+        publicShare = "$HOME/Public";
+        templates = "$HOME/Templates";
+        videos = "$HOME/Videos";
+      };
+
+    # Packages installed for this user only
+    packages = with pkgs;
+      [
+        vscode # Visual Studio Code
+        eza # Modern replacement for 'ls'
+
+        # Add other user-specific packages here
+        # Example:
+        # neovim
+        # tmux
+        # htop
+      ];
 
     # Environment variables for the user session
     # sessionVariables = {
