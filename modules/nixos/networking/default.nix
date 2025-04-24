@@ -1,8 +1,8 @@
-{ lib, hostName, ... }:
+{ hostName, ... }:
 
 {
   networking = {
-    hostName = lib.mkDefault hostName;
-    networkmanager.enable = lib.mkDefault true;
+    hostName = hostName;
+    networkmanager.enable = true;
   };
 }

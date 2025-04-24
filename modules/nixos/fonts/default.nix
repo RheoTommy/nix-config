@@ -1,7 +1,7 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
-  fonts = lib.mkDefault {
+  fonts = {
     packages = with pkgs; [
       noto-fonts-cjk-serif
       noto-fonts-cjk-sans

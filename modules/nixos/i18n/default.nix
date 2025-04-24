@@ -1,9 +1,9 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
   i18n = {
-    defaultLocale = lib.mkDefault "ja_JP.UTF-8";
-    extraLocaleSettings = lib.mkDefault {
+    defaultLocale = "ja_JP.UTF-8";
+    extraLocaleSettings = {
       LC_ADDRESS = "ja_JP.UTF-8";
       LC_IDENTIFICATION = "ja_JP.UTF-8";
       LC_MEASUREMENT = "ja_JP.UTF-8";
@@ -15,7 +15,7 @@
       LC_TIME = "ja_JP.UTF-8";
     };
 
-    inputMethod = lib.mkDefault {
+    inputMethod = {
       enable = true;
       type = "fcitx5";
       # Enable Mozc-UT dictionary
@@ -24,7 +24,7 @@
   };
 
   time = {
-    timeZone = lib.mkDefault "Asia/Tokyo";
-    hardwareClockInLocalTime = lib.mkDefault true;
+    timeZone = "Asia/Tokyo";
+    hardwareClockInLocalTime = true;
   };
 }
