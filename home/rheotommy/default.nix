@@ -37,7 +37,7 @@
   };
 
   # Packages installed for this user only
-  packages = with pkgs; [
+  home.packages = with pkgs; [
     vscode # Visual Studio Code
     eza # Modern replacement for 'ls'
 
