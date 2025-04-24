@@ -15,8 +15,12 @@
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
-    programs.home-manager.enable = true;
+
+    # Set state version for compatibility. Do not change unless necessary.
+    stateVersion = "24.11";
   };
+
+  programs.home-manager.enable = true;
 
   xdg.userDirs = {
     enable = true;
@@ -98,6 +102,4 @@
   #   # userSettings = { ... };
   # };
 
-  # Set state version for compatibility. Do not change unless necessary.
-  stateVersion = "24.11";
 }
