@@ -7,7 +7,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     home-manager = {
-      url = "github:nix-community/home-manager";
+      url = "github:nix-community/home-manager/release-24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -31,6 +31,14 @@
           inherit system;
           modules = [
             ./hosts/${hostName}
+
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users."${username}" = ./home/${username};
+              home-manager.extraSpecialArgs = { inherit username inputs; };
+            }
           ];
           specialArgs = { inherit username hostName inputs; };
         };
@@ -42,19 +50,6 @@
           value = mkNixosSystem hostName;
         }) hosts
       );
-
-      homeConfigurations = {
-        home = inputs.home-manager.lib.homeManagerConfiguration {
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
-          extraSpecialArgs = { inherit username inputs; };
-          modules = [
-            ./home/${username}
-          ];
-        };
-      };
 
       formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
     };
