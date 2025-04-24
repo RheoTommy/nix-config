@@ -9,5 +9,7 @@
         ../modules/nixos/networking
         ../modules/nixos/nix
         ../modules/nixos/plasma
+        ../modules/nixos/services
+        ../modules/nixos/users
     ];
 }
