@@ -1,6 +1,10 @@
 { config, pkgs, inputs, lib, username, ... }:
 
 {
+  imports = [
+
+  ];
+
   home = {
     inherit username;
     homeDirectory = "/home/${username}";
@@ -36,25 +40,25 @@
   programs.git = {
     enable = true;
     userName = "rheotommy"; # Replace with your actual Git username
-    userEmail = "your.email@example.com"; # Replace with your actual Git email
-    # extraConfig = {
-    #   init.defaultBranch = "main";
-    # };
+    userEmail = "tommyrheo@gmail.com"; # Replace with your actual Git email
+    extraConfig = {
+      init.defaultBranch = "main";
+    };
   };
 
   # Starship prompt configuration (if used in user's shell)
   programs.starship = {
     enable = true;
-    # enableZshIntegration = true; # If using Zsh
+    enableZshIntegration = true; # If using Zsh
     # settings = { ... }; # Custom starship settings
   };
 
   # Zsh configuration (if Zsh is the user's shell)
   programs.zsh = {
     enable = true;
-    # enableAutosuggestions = true;
-    # enableCompletion = true;
-    # syntaxHighlighting.enable = true;
+    enableAutosuggestions = true;
+    enableCompletion = true;
+    syntaxHighlighting.enable = true;
     # oh-my-zsh = {
     #   enable = true;
     #   plugins = [ "git" ];
@@ -72,16 +76,6 @@
   #   # extensions = with pkgs.vscode-extensions; [ ... ];
   #   # userSettings = { ... };
   # };
-
-  # --- Home Manager Service ---
-  # This line is managed by the NixOS module, so it's not strictly needed here.
-  # programs.home-manager.enable = true;
-
-  # --- Import common modules (when you create them) ---
-  # imports = [
-  #   ../../modules/home-manager/base.nix
-  #   ../../modules/home-manager/cli-tools.nix
-  # ];
 
   # Set state version for compatibility. Do not change unless necessary.
   stateVersion = "24.11";
