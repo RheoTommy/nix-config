@@ -9,4 +9,7 @@
   };
 
   services.desktopManager.plasma6.enable = true;
+
+  # For fcitx diagnosis
+  i18n.inputMethod.fcitx5.waylandFrontend = true;
 }
