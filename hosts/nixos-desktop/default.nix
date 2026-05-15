@@ -10,6 +10,10 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+  boot.kernelParams = [
+    # Store preserved NVIDIA VRAM on disk instead of tmpfs during suspend.
+    "nvidia.NVreg_TemporaryFilePath=/var/tmp"
+  ];
 
   networking.hostName = "nixos-desktop";
 
@@ -29,15 +33,15 @@
     graphics = {
       enable = true;
       # For Steam / Wine / Proton / 32-bit Vulkan/OpenGL support.
-      enable32Bit = true; 
+      enable32Bit = true;
     };
 
     nvidia = {
       modesetting.enable = true;
-      # RTX 3070 is Ampere, so the open NVIDIA kernel module is supported and preferred.
+      # RTX 3070 is Ampere, which is supported by NVIDIA's open kernel module.
       open = true;
-      # TODO: If suspend/resume is unstable on the desktop, test whether
-      # hardware.nvidia.powerManagement.enable improves it before enabling.
+      # Enables NVIDIA's systemd suspend/resume integration and preserves VRAM.
+      powerManagement.enable = true;
     };
   };
 
