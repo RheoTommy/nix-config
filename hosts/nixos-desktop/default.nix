@@ -4,6 +4,7 @@
   imports = [
     ../../modules/nixos/common
     ../../modules/nixos/home-manager-integration
+    ../../modules/nixos/remote-access
     ./hardware-configuration.nix
   ];
 

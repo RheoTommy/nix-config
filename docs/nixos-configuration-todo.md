@@ -10,6 +10,9 @@ services, kernel support, device access, or OS-level permissions.
 - [x] Unfree packages allowed globally.
 - [x] Redistributable firmware enabled.
 - [x] NetworkManager enabled.
+- [x] Tailscale enabled for private tailnet connectivity. Public Tailscale UDP
+      firewall opening is left at the NixOS default unless connectivity requires
+      it.
 - [x] English display locale with Japan-specific locale categories.
 - [x] Japanese-capable fonts installed.
 - [x] Printing service enabled.
@@ -25,9 +28,9 @@ services, kernel support, device access, or OS-level permissions.
       `services.fstrim.enable` to `true` with a weekly interval, so no explicit
       setting is needed.
 
-- [ ] Firewall policy: decide whether to keep NixOS defaults implicit or make
-      `networking.firewall` explicit. Current effective config has the firewall
-      enabled and opens UDP 5353 via Avahi.
+- [x] Firewall policy: keep NixOS defaults implicit. The firewall is enabled by
+      default, Avahi opens UDP 5353 for GNOME local discovery, and no public
+      SSH/application ports are opened.
 
 - [ ] Nix daemon policy: decide whether to configure `nix.settings.trusted-users`
       for `rheotommy`.
@@ -38,8 +41,9 @@ services, kernel support, device access, or OS-level permissions.
 - [ ] Binary cache policy: decide whether any extra substituters or trusted
       public keys are needed beyond the default NixOS cache.
 
-- [ ] SSH access: decide whether this machine should run `services.openssh` and,
-      if so, manage authorized keys and password-login policy.
+- [ ] SSH access: decide between regular OpenSSH over Tailscale and Tailscale
+      SSH. If regular OpenSSH is used, require key-only login and allow port 22
+      only on the Tailscale interface.
 
 - [ ] Local service discovery: decide whether to enable Avahi/mDNS for printer,
       scanner, SSH, or local hostname discovery.
