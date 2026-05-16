@@ -41,9 +41,9 @@ services, kernel support, device access, or OS-level permissions.
 - [ ] Binary cache policy: decide whether any extra substituters or trusted
       public keys are needed beyond the default NixOS cache.
 
-- [ ] SSH access: decide between regular OpenSSH over Tailscale and Tailscale
-      SSH. If regular OpenSSH is used, require key-only login and allow port 22
-      only on the Tailscale interface.
+- [x] SSH access: regular OpenSSH is enabled on Desktop with key-only login.
+      Port 22 is allowed only on the Tailscale interface; the public firewall
+      remains closed.
 
 - [ ] Local service discovery: decide whether to enable Avahi/mDNS for printer,
       scanner, SSH, or local hostname discovery.
