@@ -28,8 +28,17 @@
       variant = "";
     };
   };
-  services.displayManager.gdm.enable = true;
+  services.displayManager.gdm = {
+    enable = true;
+    # Desktop should not suspend when idle, as it is used for remote access.
+    autoSuspend = false;
+  };
   services.desktopManager.gnome.enable = true;
+
+  # Host-specific Home Manager configuration.
+  home-manager.users.rheotommy.imports = [
+    ./home.nix
+  ];
 
   hardware = {
     graphics = {

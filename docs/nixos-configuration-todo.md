@@ -20,6 +20,10 @@ services, kernel support, device access, or OS-level permissions.
 - [x] `rheotommy` system user created with `wheel` and `networkmanager`.
 - [x] Desktop GNOME/GDM enabled.
 - [x] Desktop NVIDIA RTX 3070 graphics and suspend support configured.
+- [x] Desktop automatic suspend disabled on AC: both GDM greeter policy and
+      GNOME user-session policy are owned by `hosts/nixos-desktop`; the
+      user-session value lives in `hosts/nixos-desktop/home.nix` and is applied
+      through Home Manager dconf.
 - [x] Home Manager integrated into NixOS activation.
 
 ## Next NixOS Decisions
@@ -57,8 +61,9 @@ services, kernel support, device access, or OS-level permissions.
 - [ ] Japanese input method: decide whether to configure fcitx5/Mozc at the
       NixOS layer, then keep user preferences in Home Manager where possible.
 
-- [ ] Desktop power behavior: review GNOME/GDM/systemd power behavior only if
-      suspend/resume shows remaining issues.
+- [x] Desktop power behavior: keep automatic suspend disabled on AC. If
+      suspend/resume still shows issues, investigate NVIDIA/systemd resume
+      behavior separately.
 
 - [ ] Container runtime: decide whether to enable Docker, Podman, or neither.
 
