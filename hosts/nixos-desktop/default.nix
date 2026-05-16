@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/nixos/common
+    ../../modules/nixos/home-manager-integration
     ./hardware-configuration.nix
   ];
 
