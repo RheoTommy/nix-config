@@ -18,6 +18,7 @@
   nixpkgs.config.allowUnfree = true;
 
   hardware.enableRedistributableFirmware = true;
+  hardware.bluetooth.enable = true;
 
   networking.networkmanager.enable = true;
 

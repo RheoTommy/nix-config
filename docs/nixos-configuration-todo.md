@@ -9,6 +9,8 @@ services, kernel support, device access, or OS-level permissions.
 - [x] Flakes enabled for Nix.
 - [x] Unfree packages allowed globally.
 - [x] Redistributable firmware enabled.
+- [x] Bluetooth enabled at the OS level. GNOME provides the UI, so no separate
+      Blueman service is enabled.
 - [x] NetworkManager enabled.
 - [x] Tailscale enabled for private tailnet connectivity. Public Tailscale UDP
       firewall opening is left at the NixOS default unless connectivity requires
@@ -54,8 +56,7 @@ services, kernel support, device access, or OS-level permissions.
 - [ ] Local service discovery: decide whether to enable Avahi/mDNS for printer,
       scanner, SSH, or local hostname discovery.
 
-- [ ] Bluetooth: decide whether Bluetooth should be enabled at the OS level and
-      whether to manage it through GNOME only or add extra tooling.
+- [x] Bluetooth: enabled at the OS level and managed through GNOME.
 
 - [ ] Printing and scanning: review printer driver needs, network printer
       discovery, and scanner support.
