@@ -38,16 +38,16 @@ services, kernel support, device access, or OS-level permissions.
       default, Avahi opens UDP 5353 for GNOME local discovery, and no public
       SSH/application ports are opened.
 
-- [ ] Nix daemon policy: decide whether to configure `nix.settings.trusted-users`
-      for `rheotommy`.
+- [x] Nix daemon policy: keep default trusted users. `root` is the only trusted
+      user, so privileged rebuilds still go through `sudo`.
 
 - [x] Nix store maintenance: run weekly garbage collection for generations
       older than 30 days and weekly scheduled store optimisation. Avoid
       `nix.settings.auto-optimise-store` for now because it adds work to
       individual builds.
 
-- [ ] Binary cache policy: decide whether any extra substituters or trusted
-      public keys are needed beyond the default NixOS cache.
+- [x] Binary cache policy: keep the default `cache.nixos.org` substituter and
+      trusted public key only.
 
 - [x] SSH access: regular OpenSSH is enabled on Desktop with key-only login.
       Port 22 is allowed only on the Tailscale interface; the public firewall
@@ -58,8 +58,9 @@ services, kernel support, device access, or OS-level permissions.
 
 - [x] Bluetooth: enabled at the OS level and managed through GNOME.
 
-- [ ] Printing and scanning: review printer driver needs, network printer
-      discovery, and scanner support.
+- [ ] Printing and scanning: CUPS printing is already enabled. If actual
+      printers or scanners are used, review driverless/AirPrint discovery,
+      device-specific drivers, and scanner support such as SANE/AirScan.
 
 - [ ] Japanese input method: decide whether to configure fcitx5/Mozc at the
       NixOS layer, then keep user preferences in Home Manager where possible.
