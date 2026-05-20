@@ -39,8 +39,10 @@ services, kernel support, device access, or OS-level permissions.
 - [ ] Nix daemon policy: decide whether to configure `nix.settings.trusted-users`
       for `rheotommy`.
 
-- [ ] Nix store maintenance: decide whether to enable automatic garbage
-      collection and `nix.settings.auto-optimise-store`.
+- [x] Nix store maintenance: run weekly garbage collection for generations
+      older than 30 days and weekly scheduled store optimisation. Avoid
+      `nix.settings.auto-optimise-store` for now because it adds work to
+      individual builds.
 
 - [ ] Binary cache policy: decide whether any extra substituters or trusted
       public keys are needed beyond the default NixOS cache.
