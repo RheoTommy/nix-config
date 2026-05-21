@@ -73,7 +73,10 @@ services, kernel support, device access, or OS-level permissions.
       suspend/resume still shows issues, investigate NVIDIA/systemd resume
       behavior separately.
 
-- [ ] Container runtime: decide whether to enable Docker, Podman, or neither.
+- [x] Container runtime: enable the standard Podman setup with Docker CLI
+      compatibility and DNS on the default Podman network for Compose-style
+      service discovery. Keep Docker socket compatibility disabled unless a
+      concrete tool such as Dev Containers or Testcontainers requires it.
 
 - [ ] Virtualization: decide whether to enable libvirt, QEMU/KVM, VirtualBox, or
       none.

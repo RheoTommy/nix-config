@@ -22,6 +22,12 @@
 
   networking.networkmanager.enable = true;
 
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+    defaultNetwork.settings.dns_enabled = true;
+  };
+
   time.timeZone = "Asia/Tokyo";
 
   i18n = {
