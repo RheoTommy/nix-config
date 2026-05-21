@@ -17,6 +17,8 @@ services, kernel support, device access, or OS-level permissions.
       it.
 - [x] English display locale with Japan-specific locale categories.
 - [x] Japanese-capable fonts installed.
+- [x] Japanese input method enabled with Fcitx5 and Mozc. Fine-grained input
+      preferences should stay in Home Manager if they become worth managing.
 - [x] Printing service enabled.
 - [x] PipeWire audio enabled.
 - [x] `rheotommy` system user created with `wheel` and `networkmanager`.
@@ -64,8 +66,8 @@ services, kernel support, device access, or OS-level permissions.
       driverless/AirPrint discovery, device-specific drivers, or scanner support
       such as SANE/AirScan when an actual device needs it.
 
-- [ ] Japanese input method: decide whether to configure fcitx5/Mozc at the
-      NixOS layer, then keep user preferences in Home Manager where possible.
+- [x] Japanese input method: use the standard Fcitx5 + Mozc stack at the NixOS
+      layer. Hazkey remains deferred until it can be configured cleanly.
 
 - [x] Desktop power behavior: keep automatic suspend disabled on AC. If
       suspend/resume still shows issues, investigate NVIDIA/systemd resume
