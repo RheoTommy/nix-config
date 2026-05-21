@@ -53,14 +53,16 @@ services, kernel support, device access, or OS-level permissions.
       Port 22 is allowed only on the Tailscale interface; the public firewall
       remains closed.
 
-- [ ] Local service discovery: decide whether to enable Avahi/mDNS for printer,
-      scanner, SSH, or local hostname discovery.
+- [x] Local service discovery: do not add explicit Avahi/mDNS settings for now.
+      Remote development and personal services use Tailscale, while LAN
+      discovery should be revisited only when a concrete printer, scanner, NAS,
+      or `.local` hostname workflow needs it.
 
 - [x] Bluetooth: enabled at the OS level and managed through GNOME.
 
-- [ ] Printing and scanning: CUPS printing is already enabled. If actual
-      printers or scanners are used, review driverless/AirPrint discovery,
-      device-specific drivers, and scanner support such as SANE/AirScan.
+- [x] Printing and scanning: keep only CUPS printing enabled for now. Add
+      driverless/AirPrint discovery, device-specific drivers, or scanner support
+      such as SANE/AirScan when an actual device needs it.
 
 - [ ] Japanese input method: decide whether to configure fcitx5/Mozc at the
       NixOS layer, then keep user preferences in Home Manager where possible.
