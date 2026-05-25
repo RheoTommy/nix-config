@@ -37,9 +37,38 @@
       type = "fcitx5";
       fcitx5 = {
         waylandFrontend = true;
+        ignoreUserConfig = true;
         addons = with pkgs; [
+          fcitx5-gtk
           fcitx5-mozc
         ];
+        settings = {
+          globalOptions = {
+            Behavior = {
+              ActiveByDefault = false;
+              PreloadInputMethod = true;
+              ShareInputState = "All";
+            };
+            Hotkey = {
+              EnumerateSkipFirst = true;
+              EnumerateWithTriggerKeys = false;
+            };
+            "Hotkey/TriggerKeys"."0" = "Control+space";
+          };
+          inputMethod = {
+            GroupOrder."0" = "Default";
+            "Groups/0" = {
+              Name = "Default";
+              "Default Layout" = "us";
+              DefaultIM = "mozc";
+            };
+            "Groups/0/Items/0".Name = "keyboard-us";
+            "Groups/0/Items/1" = {
+              Name = "mozc";
+              Layout = "us";
+            };
+          };
+        };
       };
     };
     extraLocaleSettings = {
