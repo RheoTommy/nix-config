@@ -81,4 +81,15 @@
       "wheel"
     ];
   };
+
+  environment.systemPackages = [
+    pkgs.google-chrome
+  ];
+
+  programs._1password.enable = true;
+  programs._1password-gui = {
+    enable = true;
+    # Enables 1Password features that need polkit approval, such as CLI integration.
+    polkitPolicyOwners = [ "rheotommy" ];
+  };
 }
