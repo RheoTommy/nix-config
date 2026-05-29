@@ -34,6 +34,8 @@
     autoSuspend = false;
   };
   services.desktopManager.gnome.enable = true;
+  # Keep GNOME available as a fallback while making Niri selectable from GDM.
+  programs.niri.enable = true;
 
   # Host-specific Home Manager configuration.
   home-manager.users.rheotommy.imports = [
