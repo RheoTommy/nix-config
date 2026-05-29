@@ -23,5 +23,23 @@
 
   home.packages = [
     inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    pkgs.slack
+    pkgs.discord
+    pkgs.vscode
+    pkgs.zed-editor
+    pkgs.spotify
+    pkgs.logseq
+    pkgs.obsidian
+    pkgs.teams-for-linux
+    pkgs.zoom-us
+
+    pkgs.jetbrains-toolbox
+    pkgs.jetbrains.idea
+    pkgs.jetbrains.goland
+    pkgs.jetbrains.rust-rover
+    pkgs.jetbrains.clion
+    pkgs.jetbrains.webstorm
+    pkgs.jetbrains.pycharm
   ];
 }
