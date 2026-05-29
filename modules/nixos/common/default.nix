@@ -57,6 +57,8 @@
     noto-fonts-cjk-serif
     noto-fonts-color-emoji
     googlesans-code
+    plemoljp
+    plemoljp-nf
   ];
 
   services.printing.enable = true;
@@ -73,11 +75,14 @@
   users.users.rheotommy = {
     isNormalUser = true;
     description = "rheotommy";
+    shell = pkgs.zsh;
     extraGroups = [
       "networkmanager"
       "wheel"
     ];
   };
+
+  programs.zsh.enable = true;
 
   environment.systemPackages = [
     pkgs.google-chrome

@@ -10,6 +10,9 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    # When a file was created manually before being moved under Home Manager,
+    # activation should preserve the old copy instead of failing on first switch.
+    backupFileExtension = "hm-backup";
     extraSpecialArgs = {
       inherit inputs;
     };

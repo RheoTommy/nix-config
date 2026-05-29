@@ -21,8 +21,29 @@
     };
   };
 
+  programs.gh.enable = true;
+  programs.zsh = {
+    enable = true;
+    enableCompletion = true;
+    history = {
+      path = "$HOME/.histfile";
+      size = 1000;
+      save = 1000;
+    };
+    defaultKeymap = "emacs";
+  };
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   home.packages = [
     inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+    inputs.claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
+
+    pkgs.mise
+    pkgs.awscli2
+    pkgs.google-cloud-sdk
 
     pkgs.slack
     pkgs.discord
