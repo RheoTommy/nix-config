@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/home-manager/common
+    ../../modules/home-manager/desktop/niri
     ../../modules/home-manager/programs/jujutsu
     ../../modules/home-manager/programs/zellij
   ];
@@ -45,7 +46,6 @@
     pkgs.mise
     pkgs.awscli2
     pkgs.google-cloud-sdk
-    pkgs.xwayland-satellite
     pkgs.fuzzel
     pkgs.alacritty
     pkgs.waybar
