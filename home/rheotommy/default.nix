@@ -10,7 +10,8 @@
   home = {
     username = "rheotommy";
     homeDirectory = "/home/rheotommy";
-    stateVersion = "25.11";
+    # Initial production baseline. Keep this value across future upgrades.
+    stateVersion = "26.05";
   };
 
   programs.git = {
@@ -61,7 +62,6 @@
     pkgs.vscode
     pkgs.zed-editor
     pkgs.spotify
-    pkgs.logseq
     pkgs.obsidian
     pkgs.teams-for-linux
     pkgs.zoom-us

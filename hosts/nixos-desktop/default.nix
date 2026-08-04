@@ -58,5 +58,6 @@
     };
   };
 
-  system.stateVersion = "25.11";
+  # Initial production baseline. Keep this value across future upgrades.
+  system.stateVersion = "26.05";
 }
