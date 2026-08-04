@@ -17,12 +17,15 @@ services, kernel support, device access, or OS-level permissions.
       it.
 - [x] English display locale with Japan-specific locale categories.
 - [x] Japanese-capable fonts installed.
-- [x] Japanese input method enabled with Fcitx5 and Mozc. Fine-grained input
-      preferences should stay in Home Manager if they become worth managing.
+- [x] Japanese input method enabled with Fcitx5 and Mozc, with a declarative US
+      keyboard/Mozc profile and native Wayland frontend.
 - [x] Printing service enabled.
 - [x] PipeWire audio enabled.
 - [x] `rheotommy` system user created with `wheel` and `networkmanager`.
-- [x] Desktop GNOME/GDM enabled.
+- [x] Desktop Niri/GDM enabled, with GNOME retained as a temporary recovery
+      session.
+- [x] Niri session services configured: Waybar, Mako, Fuzzel, swayidle,
+      swaylock, background, Xwayland Satellite, and a polkit agent.
 - [x] Desktop NVIDIA RTX 3070 graphics and suspend support configured.
 - [x] Desktop automatic suspend disabled on AC: both GDM greeter policy and
       GNOME user-session policy are owned by `hosts/nixos-desktop`; the
@@ -84,8 +87,10 @@ services, kernel support, device access, or OS-level permissions.
 - [ ] Secrets management: decide whether to introduce `sops-nix`, `agenix`, or
       leave secrets outside this repository for now.
 
-- [ ] Security baseline: review sudo/wheel policy, polkit expectations, and any
-      system-level integration for tools like 1Password.
+- [x] Polkit integration: Niri enables polkit, its session starts a GTK
+      authentication agent, and 1Password grants its policy to `rheotommy`.
+
+- [ ] Security baseline: review the sudo/wheel policy.
 
 - [ ] Laptop hardware path: when the laptop host is added, review
       `nixos-hardware`, power management, battery behavior, touchpad, fingerprint,
