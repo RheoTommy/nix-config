@@ -34,10 +34,24 @@
     defaultLocale = "en_US.UTF-8";
     inputMethod = {
       enable = true;
-      type = "ibus";
-      ibus.engines = with pkgs.ibus-engines; [
-        mozc
-      ];
+      type = "fcitx5";
+      fcitx5 = {
+        addons = with pkgs; [
+          fcitx5-mozc
+          fcitx5-gtk
+        ];
+        waylandFrontend = true;
+        settings.inputMethod = {
+          GroupOrder."0" = "Default";
+          "Groups/0" = {
+            Name = "Default";
+            "Default Layout" = "us";
+            DefaultIM = "mozc";
+          };
+          "Groups/0/Items/0".Name = "keyboard-us";
+          "Groups/0/Items/1".Name = "mozc";
+        };
+      };
     };
     extraLocaleSettings = {
       LC_ADDRESS = "ja_JP.UTF-8";
@@ -51,6 +65,9 @@
       LC_TIME = "ja_JP.UTF-8";
     };
   };
+
+  # Prefer the native Qt Wayland input protocol, with Fcitx as a fallback.
+  environment.sessionVariables.QT_IM_MODULES = "wayland;fcitx";
 
   fonts.packages = with pkgs; [
     noto-fonts-cjk-sans
