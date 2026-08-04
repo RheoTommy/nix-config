@@ -46,16 +46,7 @@
     pkgs.mise
     pkgs.awscli2
     pkgs.google-cloud-sdk
-    pkgs.fuzzel
-    pkgs.alacritty
-    pkgs.waybar
-    pkgs.mako
-    pkgs.swaybg
-    pkgs.swayidle
-    pkgs.swaylock
     pkgs.wl-clipboard
-    pkgs.grim
-    pkgs.slurp
 
     pkgs.slack
     pkgs.discord

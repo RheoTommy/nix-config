@@ -1,6 +1,147 @@
 { pkgs, ... }:
 
 {
+  home.packages = [
+    pkgs.brightnessctl
+    pkgs.playerctl
+    pkgs.pavucontrol
+    pkgs.wireplumber
+  ];
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+  };
+
+  programs.alacritty = {
+    enable = true;
+    settings.font.normal.family = "PlemolJP Console NF";
+  };
+
+  programs.fuzzel = {
+    enable = true;
+    settings.main = {
+      font = "PlemolJP Console NF:size=11";
+      terminal = "${pkgs.alacritty}/bin/alacritty";
+    };
+  };
+
+  programs.swaylock = {
+    enable = true;
+    settings = {
+      color = "1e1e2e";
+      show-failed-attempts = true;
+    };
+  };
+
+  programs.waybar = {
+    enable = true;
+    systemd = {
+      enable = true;
+      targets = [ "niri.service" ];
+    };
+    settings.mainBar = {
+      layer = "top";
+      position = "top";
+      height = 30;
+      modules-left = [ "niri/workspaces" ];
+      modules-center = [ "niri/window" ];
+      modules-right = [
+        "pulseaudio"
+        "network"
+        "clock"
+        "tray"
+      ];
+
+      "niri/workspaces" = {
+        format = "{index}";
+      };
+      "niri/window" = {
+        max-length = 80;
+      };
+      pulseaudio = {
+        format = "{icon} {volume}%";
+        format-muted = "muted";
+        format-icons.default = [
+          "low"
+          "mid"
+          "high"
+        ];
+        on-click = "${pkgs.pavucontrol}/bin/pavucontrol";
+      };
+      network = {
+        format-ethernet = "eth {ipaddr}";
+        format-wifi = "wifi {essid}";
+        format-disconnected = "offline";
+        on-click = "${pkgs.alacritty}/bin/alacritty -e ${pkgs.networkmanager}/bin/nmtui";
+      };
+      clock = {
+        format = "{:%Y-%m-%d %H:%M}";
+        tooltip-format = "<tt>{calendar}</tt>";
+      };
+      tray.spacing = 8;
+    };
+  };
+
+  services.mako.enable = true;
+
+  services.swayidle = {
+    enable = true;
+    systemdTargets = [ "niri.service" ];
+    timeouts = [
+      {
+        timeout = 600;
+        command = "${pkgs.swaylock}/bin/swaylock -f";
+      }
+      {
+        timeout = 660;
+        command = "${pkgs.niri}/bin/niri msg action power-off-monitors";
+      }
+    ];
+    events = {
+      before-sleep = "${pkgs.swaylock}/bin/swaylock -f";
+      lock = "${pkgs.swaylock}/bin/swaylock -f";
+    };
+  };
+
+  systemd.user.services = {
+    niri-background = {
+      Unit = {
+        Description = "Niri desktop background";
+        PartOf = [ "niri.service" ];
+        After = [ "niri.service" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.swaybg}/bin/swaybg -c #1e1e2e";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "niri.service" ];
+    };
+
+    niri-mako = {
+      Unit = {
+        Description = "Notification daemon for Niri";
+        PartOf = [ "niri.service" ];
+        After = [ "niri.service" ];
+      };
+      Service = {
+        ExecStart = "${pkgs.mako}/bin/mako";
+        Restart = "on-failure";
+      };
+      Install.WantedBy = [ "niri.service" ];
+    };
+
+    niri-polkit-agent = {
+      Unit = {
+        Description = "Polkit authentication agent for Niri";
+        PartOf = [ "niri.service" ];
+        After = [ "niri.service" ];
+      };
+      Service.ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+      Install.WantedBy = [ "niri.service" ];
+    };
+  };
+
   wayland.windowManager.niri = {
     enable = true;
 
@@ -89,6 +230,62 @@
         };
         "Mod+Shift+E".quit = { };
         "Mod+Shift+P".power-off-monitors = { };
+
+        XF86AudioRaiseVolume = {
+          _props.allow-when-locked = true;
+          spawn-sh = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+ -l 1.0";
+        };
+        XF86AudioLowerVolume = {
+          _props.allow-when-locked = true;
+          spawn-sh = "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-";
+        };
+        XF86AudioMute = {
+          _props.allow-when-locked = true;
+          spawn-sh = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        };
+        XF86AudioMicMute = {
+          _props.allow-when-locked = true;
+          spawn-sh = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
+        };
+        XF86AudioPlay = {
+          _props.allow-when-locked = true;
+          spawn = [
+            "${pkgs.playerctl}/bin/playerctl"
+            "play-pause"
+          ];
+        };
+        XF86AudioPrev = {
+          _props.allow-when-locked = true;
+          spawn = [
+            "${pkgs.playerctl}/bin/playerctl"
+            "previous"
+          ];
+        };
+        XF86AudioNext = {
+          _props.allow-when-locked = true;
+          spawn = [
+            "${pkgs.playerctl}/bin/playerctl"
+            "next"
+          ];
+        };
+        XF86MonBrightnessUp = {
+          _props.allow-when-locked = true;
+          spawn = [
+            "${pkgs.brightnessctl}/bin/brightnessctl"
+            "--class=backlight"
+            "set"
+            "+10%"
+          ];
+        };
+        XF86MonBrightnessDown = {
+          _props.allow-when-locked = true;
+          spawn = [
+            "${pkgs.brightnessctl}/bin/brightnessctl"
+            "--class=backlight"
+            "set"
+            "10%-"
+          ];
+        };
       };
     };
   };
