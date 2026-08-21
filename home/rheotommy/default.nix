@@ -1,13 +1,7 @@
-{ inputs, pkgs, ... }:
+# User-scoped packages and configuration managed by Home Manager.
+{ pkgs, ... }:
 
 {
-  imports = [
-    ../../modules/home-manager/common
-    ../../modules/home-manager/desktop/niri
-    ../../modules/home-manager/programs/jujutsu
-    ../../modules/home-manager/programs/zellij
-  ];
-
   home = {
     username = "rheotommy";
     homeDirectory = "/home/rheotommy";
@@ -15,6 +9,8 @@
     stateVersion = "26.05";
   };
 
+  # Home Manager program modules both install the program and manage its
+  # user-level configuration.
   programs.git = {
     enable = true;
     settings.user = {
@@ -22,47 +18,17 @@
       email = "tommyrheo@gmail.com";
     };
   };
-
   programs.gh.enable = true;
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    history = {
-      path = "$HOME/.histfile";
-      size = 1000;
-      save = 1000;
-    };
-    defaultKeymap = "emacs";
-  };
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-  };
 
+  # home.packages only installs these user-owned applications; their settings
+  # remain unmanaged unless a dedicated Home Manager program module is added.
   home.packages = [
-    inputs.codex-cli-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
-    inputs.claude-code-nix.packages.${pkgs.stdenv.hostPlatform.system}.default
-
-    pkgs.mise
-    pkgs.awscli2
-    pkgs.google-cloud-sdk
-    pkgs.wl-clipboard
-
+    pkgs.google-chrome
     pkgs.slack
     pkgs.discord
-    pkgs.vscode
-    pkgs.zed-editor
     pkgs.spotify
     pkgs.obsidian
     pkgs.teams-for-linux
     pkgs.zoom-us
-
-    pkgs.jetbrains-toolbox
-    pkgs.jetbrains.idea
-    pkgs.jetbrains.goland
-    pkgs.jetbrains.rust-rover
-    pkgs.jetbrains.clion
-    pkgs.jetbrains.webstorm
-    pkgs.jetbrains.pycharm
   ];
 }

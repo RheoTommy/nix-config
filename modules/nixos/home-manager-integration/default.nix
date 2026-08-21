@@ -1,3 +1,4 @@
+# Adds Home Manager support without binding the integration to a specific user.
 { inputs, ... }:
 
 {
@@ -8,16 +9,11 @@
   ];
 
   home-manager = {
+    # Reuse the NixOS pkgs instance, including its nixpkgs configuration.
     useGlobalPkgs = true;
-    useUserPackages = true;
-    # When a file was created manually before being moved under Home Manager,
-    # activation should preserve the old copy instead of failing on first switch.
-    backupFileExtension = "hm-backup";
-    extraSpecialArgs = {
-      inherit inputs;
-    };
 
-    # Attach rheotommy's Home Manager configuration to the NixOS activation.
-    users.rheotommy = import ../../../home/rheotommy;
+    # Install home.packages under /etc/profiles/per-user instead of the separate
+    # Home Manager profile under the home directory.
+    useUserPackages = true;
   };
 }

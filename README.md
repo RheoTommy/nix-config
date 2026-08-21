@@ -1,22 +1,30 @@
 # NixOS configuration
 
+My NixOS flake.
+
+## Layout
+
+- `flake.nix`: flake inputs and host definitions
+- `hosts/<host>/`: host-specific NixOS configuration
+- `home/<user>/`: shared Home Manager configuration for each user
+- `modules/`: reusable modules, split into `nixos/` and `home-manager/` as needed
+
+Each host imports the modules it needs and attaches the appropriate user
+configurations through `home-manager.users.<user>`.
+
 ## Validate
 
 ```bash
-nix flake check --no-build --no-write-lock-file
-nix build .#nixosConfigurations.nixos-desktop.config.system.build.toplevel
+nix flake check
+nixos-rebuild build --flake .#nixos-desktop
 ```
 
 ## Apply
 
-Stage the new generation for the next boot first:
+Apply immediately:
 
 ```bash
-sudo nixos-rebuild boot --flake .#nixos-desktop
+sudo nixos-rebuild switch --flake .#nixos-desktop
 ```
 
-After rebooting and completing the runtime checklist, make it the current
-generation with `sudo nixos-rebuild switch --flake .#nixos-desktop`.
-
-See [docs/step1-validation.md](docs/step1-validation.md) for the Niri, IME,
-portal, 1Password, NVIDIA, and rollback checks.
+Use `boot` instead of `switch` to activate the configuration on the next boot.

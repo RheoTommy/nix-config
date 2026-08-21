@@ -1,7 +1,9 @@
+# Machine-specific configuration for the current desktop.
 { ... }:
 
 {
   imports = [
+    # Shared policy is imported explicitly so each future host controls its scope.
     ../../modules/nixos/common
     ../../modules/nixos/home-manager-integration
     ../../modules/nixos/remote-access
@@ -12,51 +14,26 @@
     systemd-boot.enable = true;
     efi.canTouchEfiVariables = true;
   };
+  networking.hostName = "nixos-desktop";
+
+  # Enable the NixOS desktop environment, including the Plasma 6 desktop and SDDM display manager.
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
+
+  # NVIDIA RTX 3070 graphics and suspend support.
+  services.xserver.videoDrivers = [ "nvidia" ];
+  hardware.graphics.enable = true;
+  hardware.nvidia = {
+    modesetting.enable = true;
+    # RTX 3070 is supported by the open NVIDIA kernel module.
+    open = true;
+    # Preserve VRAM across suspend and resume.
+    powerManagement.enable = true;
+  };
   boot.kernelParams = [
     # Store preserved NVIDIA VRAM on disk instead of tmpfs during suspend.
     "nvidia.NVreg_TemporaryFilePath=/var/tmp"
   ];
-
-  networking.hostName = "nixos-desktop";
-
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "nvidia" ];
-
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
-  };
-  services.displayManager.gdm = {
-    enable = true;
-    # Desktop should not suspend when idle, as it is used for remote access.
-    autoSuspend = false;
-  };
-  services.desktopManager.gnome.enable = true;
-  # Keep GNOME available as a fallback while making Niri selectable from GDM.
-  programs.niri.enable = true;
-
-  # Host-specific Home Manager configuration.
-  home-manager.users.rheotommy.imports = [
-    ./home.nix
-  ];
-
-  hardware = {
-    graphics = {
-      enable = true;
-      # For Steam / Wine / Proton / 32-bit Vulkan/OpenGL support.
-      enable32Bit = true;
-    };
-
-    nvidia = {
-      modesetting.enable = true;
-      # RTX 3070 is Ampere, which is supported by NVIDIA's open kernel module.
-      open = true;
-      # Enables NVIDIA's systemd suspend/resume integration and preserves VRAM.
-      powerManagement.enable = true;
-    };
-  };
 
   # Initial production baseline. Keep this value across future upgrades.
   system.stateVersion = "26.05";

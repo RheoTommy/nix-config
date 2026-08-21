@@ -1,3 +1,4 @@
+# Restricts key-only SSH access to the private Tailscale interface.
 { config, ... }:
 
 {

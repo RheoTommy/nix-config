@@ -1,3 +1,4 @@
+# Defines flake inputs and assembles the NixOS configuration for each host.
 {
   description = "RheoTommy NixOS configuration";
 
@@ -5,10 +6,9 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     home-manager = {
       url = "github:nix-community/home-manager";
+      # Evaluate Home Manager with the same nixpkgs revision as NixOS.
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    codex-cli-nix.url = "github:sadjow/codex-cli-nix";
-    claude-code-nix.url = "github:sadjow/claude-code-nix";
   };
 
   outputs =
@@ -18,6 +18,8 @@
       pkgs = nixpkgs.legacyPackages.${system};
       nixosDesktop = nixpkgs.lib.nixosSystem {
         inherit system;
+        # Expose flake inputs to NixOS modules; the Home Manager integration
+        # module uses this to import its NixOS module.
         specialArgs = {
           inherit inputs;
         };
