@@ -16,6 +16,15 @@
   };
   networking.hostName = "nixos-desktop";
 
+  # Keep this host reachable over SSH; display blanking remains controlled by
+  # the desktop environment independently of system sleep.
+  systemd.sleep.settings.Sleep = {
+    AllowSuspend = false;
+    AllowHibernation = false;
+    AllowHybridSleep = false;
+    AllowSuspendThenHibernate = false;
+  };
+
   # Enable the NixOS desktop environment, including the Plasma 6 desktop and SDDM display manager.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
