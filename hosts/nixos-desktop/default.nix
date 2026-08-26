@@ -8,6 +8,8 @@
     ../../modules/nixos/home-manager-integration
     ../../modules/nixos/remote-access
     ./hardware-configuration.nix
+    # TEMPORARY: storage fault diagnostics (inbox#59). Drop with the module.
+    ./storage-monitor.nix
   ];
 
   boot.loader = {
