@@ -18,6 +18,10 @@
   };
   networking.hostName = "nixos-desktop";
 
+  # Windows on the other NVMe drive keeps the RTC in local time. Match it so
+  # the clock does not shift by the timezone offset after each dual boot.
+  time.hardwareClockInLocalTime = true;
+
   # This host has no swap partition. Compressed in-memory swap gives the kernel
   # room to reclaim idle pages without a disk-backed swap device. The default
   # size (50% of RAM) is enough for now.
