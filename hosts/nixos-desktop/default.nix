@@ -18,6 +18,11 @@
   };
   networking.hostName = "nixos-desktop";
 
+  # This host has no swap partition. Compressed in-memory swap gives the kernel
+  # room to reclaim idle pages without a disk-backed swap device. The default
+  # size (50% of RAM) is enough for now.
+  zramSwap.enable = true;
+
   # Keep this host reachable over SSH; display blanking remains controlled by
   # the desktop environment independently of system sleep.
   systemd.sleep.settings.Sleep = {
