@@ -19,4 +19,10 @@
   };
 
   nixpkgs.config.allowUnfree = true;
+
+  # NixOS has no /lib64/ld-linux-x86-64.so.2, so pre-built binaries that were
+  # not packaged with Nix (mise-installed runtimes, npm-downloaded helpers,
+  # vendor CLIs) fail to start. nix-ld provides that loader path together with
+  # a baseline set of shared libraries.
+  programs.nix-ld.enable = true;
 }
