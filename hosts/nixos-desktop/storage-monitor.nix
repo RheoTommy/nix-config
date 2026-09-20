@@ -55,7 +55,11 @@ let
 
       {
         printf '\n=== snapshot %s ===\n' "$(date --iso-8601=seconds)"
-        uptime
+        # Not `uptime`: with the RTC in local time the boot timestamp is
+        # recorded before the 9-hour clock correction, so `uptime` cannot
+        # compute the boot time and exits non-zero, which would abort the
+        # whole snapshot under `set -e`.
+        cat /proc/uptime
         cat /proc/pressure/io
         findmnt -no SOURCE,TARGET,FSTYPE,OPTIONS /
         findmnt -no SOURCE,TARGET,FSTYPE,OPTIONS /home
