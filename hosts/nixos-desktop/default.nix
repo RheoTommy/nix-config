@@ -38,6 +38,11 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  # Steam brings Proton, which runs Windows games and, through "Add a
+  # Non-Steam Game", arbitrary Windows executables. It also enables the 32-bit
+  # graphics stack those need.
+  programs.steam.enable = true;
+
   # NVIDIA RTX 3070 graphics and suspend support.
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
