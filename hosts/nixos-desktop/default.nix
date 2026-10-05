@@ -44,6 +44,9 @@
     isNormalUser = true;
     shell = pkgs.fish;
   };
+  # A browser for every account on this host, including the one above whose
+  # Home Manager setup lives elsewhere.
+  environment.systemPackages = [ pkgs.google-chrome ];
 
   # Steam brings Proton, which runs Windows games and, through "Add a
   # Non-Steam Game", arbitrary Windows executables. It also enables the 32-bit

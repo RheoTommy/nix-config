@@ -23,7 +23,6 @@
   # home.packages only installs these user-owned applications; their settings
   # remain unmanaged unless a dedicated Home Manager program module is added.
   home.packages = [
-    pkgs.google-chrome
     pkgs.slack
     pkgs.discord
     pkgs.spotify
