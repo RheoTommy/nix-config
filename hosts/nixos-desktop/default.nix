@@ -1,5 +1,5 @@
 # Machine-specific configuration for the current desktop.
-{ ... }:
+{ pkgs, ... }:
 
 {
   imports = [
@@ -37,6 +37,13 @@
   # Enable the NixOS desktop environment, including the Plasma 6 desktop and SDDM display manager.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+
+  # Only the account is declared here. Its home environment is managed by a
+  # standalone Home Manager flake kept outside this repository.
+  users.users.private = {
+    isNormalUser = true;
+    shell = pkgs.fish;
+  };
 
   # Steam brings Proton, which runs Windows games and, through "Add a
   # Non-Steam Game", arbitrary Windows executables. It also enables the 32-bit
