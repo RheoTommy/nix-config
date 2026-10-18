@@ -7,6 +7,7 @@
     ../../modules/nixos/common
     ../../modules/nixos/home-manager-integration
     ../../modules/nixos/remote-access
+    ./disko.nix
     ./hardware-configuration.nix
   ];
 

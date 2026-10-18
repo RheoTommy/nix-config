@@ -9,6 +9,12 @@
       # Evaluate Home Manager with the same nixpkgs revision as NixOS.
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Declarative disk partitioning, used both at install time and to generate
+    # the fileSystems entries.
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
