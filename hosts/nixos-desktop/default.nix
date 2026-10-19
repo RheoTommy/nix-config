@@ -9,12 +9,10 @@
     ../../modules/nixos/remote-access
     ./disko.nix
     ./hardware-configuration.nix
+    ./secure-boot.nix
   ];
 
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-  };
+  boot.loader.efi.canTouchEfiVariables = true;
   networking.hostName = "nixos-desktop";
 
   # This host has no swap partition. Compressed in-memory swap gives the kernel
