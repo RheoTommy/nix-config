@@ -9,4 +9,11 @@
     # Allow containers on the default Podman network to resolve each other.
     defaultNetwork.settings.dns_enabled = true;
   };
+
+  # Run arm64 binaries through QEMU, so containers for arm64 targets can be
+  # built here. Static emulators also work inside containers.
+  boot.binfmt = {
+    emulatedSystems = [ "aarch64-linux" ];
+    preferStaticEmulators = true;
+  };
 }

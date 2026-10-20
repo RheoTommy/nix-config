@@ -1,0 +1,23 @@
+onboarding = false
+
+[theme]
+name = "catppuccin-latte"
+auto_switch = false
+
+[ui]
+agent_panel_sort = "spaces"
+
+show_agent_labels_on_pane_borders = true
+[ui.toast]
+delivery = "system"
+
+[keys]
+focus_pane_left  = ["prefix+h", "alt+left"]
+focus_pane_down  = ["prefix+j", "alt+down"]
+focus_pane_up    = ["prefix+k", "alt+up"]
+focus_pane_right = ["prefix+l", "alt+right"]
+
+split_vertical = ["prefix+v", "alt+n"]
+
+previous_tab = ["prefix+p", "alt+shift+left"]
+next_tab     = ["prefix+n", "alt+shift+right"]

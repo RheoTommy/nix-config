@@ -63,4 +63,11 @@
   # The GUI polkit owner is declared with the corresponding OS account.
   programs._1password.enable = true;
   programs._1password-gui.enable = true;
+
+  # Temporary: Logseq comes from Flathub because the nixpkgs package depends on
+  # an end-of-life Electron. Remove this once nixpkgs ships a supported one.
+  # Install it with:
+  #   flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  #   flatpak install --user flathub com.logseq.Logseq
+  services.flatpak.enable = true;
 }

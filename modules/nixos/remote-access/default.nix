@@ -26,4 +26,9 @@
     # Client key for logging in as `rheotommy` from the Ubuntu laptop.
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA4j3WYEaEKrXWFwm3ytPoZjV5ZfpctNQK13gc3uJWDG rheotommy@Ubuntu-Laptop"
   ];
+
+  # Start rheotommy's user services at boot and keep them after logout, so a
+  # long-running session, such as one driven from a phone, survives reboots
+  # and disconnects.
+  users.users.rheotommy.linger = true;
 }

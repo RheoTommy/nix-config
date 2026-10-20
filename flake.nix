@@ -21,6 +21,9 @@
       url = "github:nix-community/lanzaboote/v1.2.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Coding agents and their companion tools, updated daily. Its own pinned
+    # nixpkgs is kept so the prebuilt binaries in its cache match.
+    llm-agents.url = "github:numtide/llm-agents.nix";
   };
 
   outputs =

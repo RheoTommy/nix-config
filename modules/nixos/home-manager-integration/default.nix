@@ -15,5 +15,8 @@
     # Install home.packages under /etc/profiles/per-user instead of the separate
     # Home Manager profile under the home directory.
     useUserPackages = true;
+
+    # Let home modules use flake inputs, such as packages from other flakes.
+    extraSpecialArgs = { inherit inputs; };
   };
 }
