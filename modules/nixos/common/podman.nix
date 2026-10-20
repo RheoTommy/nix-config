@@ -14,6 +14,11 @@
   # Dockerfiles and tools written for Docker rely on it.
   virtualisation.containers.registries.search = [ "docker.io" ];
 
+  # Serve each user's rootless Podman through the Docker API socket, so tools
+  # that talk to Docker directly, such as testcontainers, find it.
+  systemd.user.sockets.podman.wantedBy = [ "sockets.target" ];
+  environment.sessionVariables.DOCKER_HOST = "unix://\${XDG_RUNTIME_DIR}/podman/podman.sock";
+
   # Run arm64 binaries through QEMU, so containers for arm64 targets can be
   # built here. Static emulators also work inside containers.
   boot.binfmt = {
