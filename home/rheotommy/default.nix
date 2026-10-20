@@ -8,6 +8,7 @@
     ./cli.nix
     ./agents.nix
     ./terminal.nix
+    ./resources.nix
     ./apps.nix
   ];
 
