@@ -23,6 +23,8 @@
           # The preset has no NixOS icon, so starship would fall back to an
           # emoji whose width varies between terminals and breaks the prompt.
           os.symbols.NixOS = "";
+          # Start commands on a line of their own instead of after the segments.
+          line_break.disabled = false;
         };
   };
 
