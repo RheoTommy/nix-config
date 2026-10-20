@@ -11,7 +11,6 @@
     pkgs.unzip
 
     # Editing and viewing
-    pkgs.micro
     pkgs.glow
     pkgs.poppler-utils
     pkgs.typst
@@ -23,4 +22,13 @@
 
     pkgs.awscli2
   ];
+
+  programs.micro = {
+    enable = true;
+    settings.colorscheme = "simple";
+  };
+
+  # The default browser flow needs a browser on this machine. A device code can
+  # be approved from any other device, such as over SSH or from a phone.
+  programs.fish.shellAbbrs.awslogin = "aws sso login --use-device-code";
 }
