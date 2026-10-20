@@ -19,6 +19,13 @@
   # room to reclaim idle pages without a disk-backed swap device. The default
   # size (50% of RAM) is enough for now.
   zramSwap.enable = true;
+  # The kernel defaults assume swap on a disk. Swapping to zram costs only
+  # compression, so prefer it over dropping file cache, and read back one page
+  # at a time since readahead saves no seek on memory.
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 180;
+    "vm.page-cluster" = 0;
+  };
 
   # Keep this host reachable over SSH; display blanking remains controlled by
   # the desktop environment independently of system sleep.
