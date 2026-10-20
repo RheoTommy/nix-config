@@ -35,6 +35,11 @@
   # vendor CLIs) fail to start. nix-ld provides that loader path together with
   # a baseline set of shared libraries.
   programs.nix-ld.enable = true;
+  # Scripts and tools written for other distributions call programs by fixed
+  # paths such as /bin/bash or /usr/bin/bwrap. envfs serves /bin and /usr/bin
+  # by looking each name up in the calling process's PATH.
+  services.envfs.enable = true;
+
   # Libraries for the Chromium that Playwright downloads for browser tests.
   programs.nix-ld.libraries = [
     pkgs.alsa-lib

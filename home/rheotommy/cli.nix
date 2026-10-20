@@ -8,6 +8,7 @@
     pkgs.fd
     pkgs.jq
     pkgs.curl
+    pkgs.unzip
 
     # Editing and viewing
     pkgs.micro

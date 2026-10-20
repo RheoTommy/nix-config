@@ -46,6 +46,11 @@
     plemoljp-nf
   ];
 
+  # Link every installed font into one directory,
+  # /run/current-system/sw/share/X11/fonts, for programs that read font files
+  # from a directory instead of asking fontconfig.
+  fonts.fontDir.enable = true;
+
   services.printing.enable = true;
 
   # rtkit grants PipeWire audio threads controlled real-time scheduling.

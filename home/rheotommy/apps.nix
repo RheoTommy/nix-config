@@ -10,5 +10,6 @@
     pkgs.teams-for-linux
     pkgs.zoom-us
     pkgs.vscode
+    pkgs.libreoffice
   ];
 }

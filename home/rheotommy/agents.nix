@@ -1,4 +1,4 @@
-# Coding agents and the tools for reviewing their work.
+# Coding agents and the tools that sandbox them and review their work.
 { inputs, pkgs, ... }:
 
 let
@@ -11,6 +11,13 @@ in
     llmAgents.claude-code
     llmAgents.codex
     llmAgents.antigravity-cli
+
+    # Sandboxing for agent-run commands. Claude Code's sandbox and the
+    # sandbox-runtime CLI (srt) isolate commands with bubblewrap and relay
+    # their network access through socat.
+    llmAgents.sandbox-runtime
+    pkgs.bubblewrap
+    pkgs.socat
 
     # Review agent-made changes before they are committed.
     llmAgents.hunk
