@@ -29,6 +29,13 @@
           echo "Usage: heavy <command> [args...]" >&2
           exit 2
         fi
+        # Podman normally asks systemd to place each container and build step
+        # in a scope of its own, outside this slice. With the cgroupfs manager
+        # they stay in the caller's cgroup, so the limits cover them too.
+        export CONTAINERS_CONF_OVERRIDE=${pkgs.writeText "heavy-containers.conf" ''
+          [engine]
+          cgroup_manager = "cgroupfs"
+        ''}
         exec systemd-run --user --scope --quiet --slice=heavy.slice -- "$@"
       '';
     })
