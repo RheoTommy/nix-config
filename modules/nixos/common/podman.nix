@@ -10,6 +10,10 @@
     defaultNetwork.settings.dns_enabled = true;
   };
 
+  # Resolve short image names such as `node:22` on Docker Hub, as Docker does.
+  # Dockerfiles and tools written for Docker rely on it.
+  virtualisation.containers.registries.search = [ "docker.io" ];
+
   # Run arm64 binaries through QEMU, so containers for arm64 targets can be
   # built here. Static emulators also work inside containers.
   boot.binfmt = {
