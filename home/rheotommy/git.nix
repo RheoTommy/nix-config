@@ -35,7 +35,19 @@
 
   # `ghq get` clones into ~/ghq/<host>/<owner>/<repo>. Ctrl-G picks a
   # repository there with fzf and changes into it.
-  home.packages = [ pkgs.ghq ];
+  #
+  # gwq creates and switches git worktrees, laid out like ghq under
+  # ~/worktrees/<host>/<owner>/<repo>/<branch>. Per-repository setup, such as
+  # files to copy into a new worktree, lives in each checkout's .gwq.toml.
+  home.packages = [
+    pkgs.ghq
+    pkgs.gwq
+  ];
+  xdg.configFile."gwq/config.toml".source = (pkgs.formats.toml { }).generate "gwq-config" {
+    # `gwq cd` and `gwq add -s` change the current shell's directory through
+    # the fish integration below, instead of starting a nested shell.
+    cd.launch_shell = false;
+  };
   programs.fish = {
     functions.ghq_fzf_cd = ''
       set -l dir (ghq list --full-path | fzf --scheme=path)
@@ -44,6 +56,7 @@
     '';
     interactiveShellInit = ''
       bind ctrl-g ghq_fzf_cd
+      gwq completion fish | source
     '';
   };
 }
