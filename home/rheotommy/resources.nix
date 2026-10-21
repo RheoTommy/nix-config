@@ -36,6 +36,11 @@
           [engine]
           cgroup_manager = "cgroupfs"
         ''}
+        # Already inside the slice, such as a script run through `heavy` that
+        # calls `heavy` again: run the command where it is.
+        if [[ "$(</proc/self/cgroup)" == */heavy.slice/* ]]; then
+          exec "$@"
+        fi
         exec systemd-run --user --scope --quiet --slice=heavy.slice -- "$@"
       '';
     })
