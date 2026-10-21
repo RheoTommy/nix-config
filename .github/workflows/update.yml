@@ -1,0 +1,37 @@
+name: Update
+
+on:
+  schedule:
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-nix
+      - name: Configure the committer
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+      - name: Update flake.lock
+        run: nix flake update --commit-lock-file
+      # After the lock update, because node_modules is installed with the bun
+      # from the new lock. nix-update leaves no commit when nothing changed.
+      - name: Bump Ovis
+        run: nix run --inputs-from . nixpkgs#nix-update -- --flake ovis --subpackage node_modules --commit
+      - name: Write the PR body
+        run: git log --reverse --format='### %s%n%n%b' "origin/${GITHUB_REF_NAME}..HEAD" > "$RUNNER_TEMP/body.md"
+      - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          # Not github.token: a PR opened with it does not trigger Check.
+          token: ${{ secrets.UPDATE_PR_TOKEN }}
+          branch: update/weekly
+          delete-branch: true
+          title: Update flake inputs
+          body-path: ${{ runner.temp }}/body.md
