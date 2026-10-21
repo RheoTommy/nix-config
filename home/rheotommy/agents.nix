@@ -21,5 +21,9 @@ in
 
     # Review agent-made changes before they are committed.
     llmAgents.hunk
+
+    # Agent plugins run their hooks with node from PATH, outside any project,
+    # where mise provides none.
+    pkgs.nodejs
   ];
 }
