@@ -30,9 +30,12 @@ in
       '';
       ExecStart = "${lib.getExe herdr} server";
       WorkingDirectory = "%h";
-      # The mark comes from the desktop session. Left set, fish in the panes
+      # The marks come from the desktop session. Left set, fish in the panes
       # skips the NixOS environment and misses variables such as DOCKER_HOST.
-      UnsetEnvironment = [ "__NIXOS_SET_ENVIRONMENT_DONE" ];
+      UnsetEnvironment = [
+        "__NIXOS_SET_ENVIRONMENT_DONE"
+        "__fish_nixos_env_preinit_sourced"
+      ];
       # Not control-group: herdr saves the layout on SIGTERM before it hangs
       # up the panes itself.
       KillMode = "mixed";
