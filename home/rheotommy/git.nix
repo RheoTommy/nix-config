@@ -11,6 +11,9 @@
       };
       init.defaultBranch = "main";
       merge.conflictStyle = "zdiff3";
+      # `ghq get <repo>` without an owner falls back to $USER, which is
+      # lowercase and would clone into ~/ghq/github.com/rheotommy.
+      ghq.user = "RheoTommy";
     };
   };
 
