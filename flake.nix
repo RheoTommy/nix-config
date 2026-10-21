@@ -61,5 +61,9 @@
       };
 
       formatter.${system} = pkgs.nixfmt-tree;
+
+      checks.${system} = {
+        herdr-ovis = import ./tests/herdr-ovis.nix { inherit inputs pkgs; };
+      };
     };
 }
