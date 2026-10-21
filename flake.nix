@@ -48,6 +48,18 @@
         nixos-desktop = nixosDesktop;
       };
 
+      # Exposed so the package can be built, and updated with nix-update, on its
+      # own.
+      packages.${system}.ovis = pkgs.callPackage ./pkgs/ovis.nix {
+        # TODO: Use pkgs.bun once this nixpkgs has bun 1.4; the warning below
+        # says when. Until then, Ovis's bun.lock needs a newer bun, taken from
+        # the nixpkgs llm-agents pins.
+        bun =
+          pkgs.lib.warnIf (pkgs.lib.versionAtLeast pkgs.bun.version "1.4")
+            "pkgs.bun is ${pkgs.bun.version}: build Ovis with it and drop the override in flake.nix"
+            inputs.llm-agents.inputs.nixpkgs.legacyPackages.${system}.bun;
+      };
+
       formatter.${system} = pkgs.nixfmt-tree;
     };
 }
