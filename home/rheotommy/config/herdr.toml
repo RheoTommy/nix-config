@@ -21,3 +21,6 @@ split_vertical = ["prefix+v", "alt+n"]
 
 previous_tab = ["prefix+p", "alt+shift+left"]
 next_tab     = ["prefix+n", "alt+shift+right"]
+
+previous_workspace = ["alt+shift+up"]
+next_workspace     = ["alt+shift+down"]
