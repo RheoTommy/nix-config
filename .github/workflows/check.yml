@@ -1,0 +1,37 @@
+name: Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-nix
+      - run: nix flake check -L
+
+  nixos-desktop:
+    runs-on: ubuntu-latest
+    steps:
+      # The closure, over 20 GiB, does not fit in the free space of / alone.
+      # Carve rather than the default cleave: joining / and /mnt is enough, and
+      # nothing needs purging.
+      - uses: wimpysworld/nothing-but-nix@687c797a730352432950c707ab493fcc951818d7 # v10
+        with:
+          hatchet-protocol: carve
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: ./.github/actions/setup-nix
+        with:
+          build-dir: /nix/build
+      - run: nix build -L --no-link .#nixosConfigurations.nixos-desktop.config.system.build.toplevel
