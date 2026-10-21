@@ -16,6 +16,23 @@ in
   home.packages = [ herdr ];
   xdg.configFile."herdr/config.toml".source = ./config/herdr.toml;
 
+  # jj leaves git's HEAD detached, so herdr's branch token stays empty in jj
+  # repositories.
+  programs.fish.functions.__herdr_report_jj = {
+    onEvent = "fish_prompt";
+    body = ''
+      set -q HERDR_WORKSPACE_ID; or return
+      set -l bookmark (jj log --ignore-working-copy --no-graph -r 'latest(::@ & bookmarks())' \
+        -T 'local_bookmarks.map(|b| b.name()).join(" ")' 2>/dev/null)
+      if test -n "$bookmark"
+        herdr workspace report-metadata $HERDR_WORKSPACE_ID --source user:jj --token jj=$bookmark &>/dev/null &
+      else
+        herdr workspace report-metadata $HERDR_WORKSPACE_ID --source user:jj --clear-token jj &>/dev/null &
+      end
+      disown
+    '';
+  };
+
   systemd.user.services.herdr = {
     Unit = {
       Description = "herdr server";
