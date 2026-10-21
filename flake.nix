@@ -64,6 +64,14 @@
 
       checks.${system} = {
         herdr-ovis = import ./tests/herdr-ovis.nix { inherit inputs pkgs; };
+        # A copy, since treefmt rewrites files in place and the source is
+        # read-only.
+        formatting = pkgs.runCommand "formatting" { nativeBuildInputs = [ pkgs.nixfmt-tree ]; } ''
+          cp -R ${./.} src
+          chmod -R u+w src
+          treefmt --ci --tree-root src
+          touch $out
+        '';
       };
     };
 }
