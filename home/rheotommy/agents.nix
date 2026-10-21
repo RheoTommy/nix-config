@@ -26,4 +26,6 @@ in
     # where mise provides none.
     pkgs.nodejs
   ];
+
+  xdg.configFile."hunk/config.toml".source = ./config/hunk.toml;
 }
