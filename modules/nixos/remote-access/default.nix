@@ -25,6 +25,8 @@
   users.users.rheotommy.openssh.authorizedKeys.keys = [
     # Client key for logging in as `rheotommy` from the Ubuntu laptop.
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA4j3WYEaEKrXWFwm3ytPoZjV5ZfpctNQK13gc3uJWDG rheotommy@Ubuntu-Laptop"
+    # Client key for logging in as `rheotommy` from the phone's SSH client.
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIyJu6mx9MWin1e4AGsqzBPv/lfgJSE2xfMMbmrBEabp ssh-term"
   ];
 
   # Start rheotommy's user services at boot and keep them after logout, so a
