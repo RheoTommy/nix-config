@@ -20,11 +20,4 @@
 
   # Creates, enrolls and verifies the keys.
   environment.systemPackages = [ pkgs.sbctl ];
-
-  # Booting a measured UKI makes systemd allocate its NvPCRs in the TPM. This
-  # machine's Intel PTT fits only three of the four, and the login one, which
-  # has the lowest priority, is skipped. Measure logins only when that NvPCR was
-  # allocated, instead of failing on every login.
-  systemd.services."systemd-pcrlogin@".unitConfig.ConditionPathExists =
-    "/run/systemd/nvpcr/login.anchor";
 }
