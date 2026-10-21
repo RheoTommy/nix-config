@@ -7,6 +7,7 @@
     ../../modules/nixos/common
     ../../modules/nixos/home-manager-integration
     ../../modules/nixos/remote-access
+    ./backup.nix
     ./disko.nix
     ./hardware-configuration.nix
     ./secure-boot.nix
