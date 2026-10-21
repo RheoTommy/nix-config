@@ -1,5 +1,5 @@
 # Provides the shared rootless container runtime.
-{ ... }:
+{ pkgs, ... }:
 
 {
   virtualisation.podman = {
@@ -9,6 +9,9 @@
     # Allow containers on the default Podman network to resolve each other.
     defaultNetwork.settings.dns_enabled = true;
   };
+
+  # `podman compose` and `docker compose` hand compose files to this provider.
+  environment.systemPackages = [ pkgs.docker-compose ];
 
   # Resolve short image names such as `node:22` on Docker Hub, as Docker does.
   # Dockerfiles and tools written for Docker rely on it.
