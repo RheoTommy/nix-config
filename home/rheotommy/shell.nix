@@ -6,7 +6,18 @@
   # Home Manager modules below add their fish integration.
   programs.fish = {
     enable = true;
-    shellAliases.clip = "wl-copy";
+    # Inside herdr or SSH the terminal in front of the user may be on another
+    # machine, where wl-copy cannot reach. OSC 52 asks that terminal to copy;
+    # herdr forwards it to its attached clients.
+    functions.clip.body = ''
+      if set -q HERDR_WORKSPACE_ID; or set -q SSH_TTY
+        # A command substitution would not see the function's stdin.
+        base64 -w0 | read -l data
+        printf '\e]52;c;%s\a' $data >/dev/tty
+      else
+        wl-copy
+      end
+    '';
   };
 
   programs.starship = {
