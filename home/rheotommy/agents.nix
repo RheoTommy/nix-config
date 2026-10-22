@@ -22,6 +22,9 @@ in
     # Review agent-made changes before they are committed.
     llmAgents.hunk
 
+    # Token usage and cost from the agents' local session logs.
+    llmAgents.ccusage
+
     # Agent plugins run their hooks with node from PATH, outside any project,
     # where mise provides none.
     pkgs.nodejs
