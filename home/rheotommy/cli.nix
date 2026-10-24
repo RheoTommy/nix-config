@@ -26,6 +26,8 @@
   programs.micro = {
     enable = true;
     settings.colorscheme = "simple";
+    # OSC 52, so that copying works through herdr and SSH too.
+    settings.clipboard = "terminal";
   };
 
   # The default browser flow needs a browser on this machine. A device code can
