@@ -10,6 +10,7 @@
     ./terminal.nix
     ./resources.nix
     ./apps.nix
+    ./taildrop.nix
   ];
 
   home = {
