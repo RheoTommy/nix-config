@@ -48,8 +48,13 @@ in
       subvolume."/home".snapshot_dir = "/home/.snapshots";
     };
   };
-  # btrbk does not create its snapshot directory.
-  systemd.tmpfiles.rules = [ "d /home/.snapshots 0755 root root -" ];
+  systemd.tmpfiles.rules = [
+    # btrbk does not create its snapshot directory.
+    "d /home/.snapshots 0755 root root -"
+    # A subvolume for Podman's storage, so that container images stay out of the
+    # snapshots of /home.
+    "v /home/rheotommy/.local/share/containers 0700 rheotommy users -"
+  ];
 
   # Mounted on first access and skipped when unplugged, since the drive is
   # usually attached but sometimes taken away.
