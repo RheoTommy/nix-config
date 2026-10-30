@@ -36,8 +36,8 @@
     extensions = [ pkgs.gh-stack ];
   };
 
-  # `ghq get` clones into ~/ghq/<host>/<owner>/<repo>. Ctrl-G picks a
-  # repository there with fzf and changes into it.
+  # Ctrl-G combines ghq repositories and gwq worktrees so navigation does
+  # not depend on the current checkout.
   #
   # gwq creates and switches git worktrees, laid out like ghq under
   # ~/worktrees/<host>/<owner>/<repo>/<branch>. Per-repository setup, such as
@@ -53,8 +53,13 @@
   };
   programs.fish = {
     functions.ghq_fzf_cd = ''
-      set -l dir (ghq list --full-path | fzf --scheme=path)
-      and cd $dir
+      set -l dir (
+        begin
+          ghq list --full-path
+          gwq list --global --json | jq -r '.[].path'
+        end | sort -u | fzf --scheme=path --no-multi
+      )
+      and cd -- "$dir"
       commandline -f repaint
     '';
     interactiveShellInit = ''
