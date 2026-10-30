@@ -41,6 +41,19 @@
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
 
+  # KWin must launch Fcitx to pass it the Wayland input-method socket;
+  # the package's generic autostart cannot establish that connection.
+  environment.etc = {
+    "xdg/kwinrc".text = ''
+      [Wayland]
+      InputMethod=/run/current-system/sw/share/applications/org.fcitx.Fcitx5.desktop
+    '';
+    "xdg/autostart/org.fcitx.Fcitx5.desktop".text = ''
+      [Desktop Entry]
+      Hidden=true
+    '';
+  };
+
   # Only the account is declared here. Its home environment is managed by a
   # standalone Home Manager flake kept outside this repository.
   users.users.private = {
