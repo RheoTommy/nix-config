@@ -10,6 +10,7 @@ in
   home.packages = [
     llmAgents.claude-code
     llmAgents.codex
+    llmAgents.chatgpt
     llmAgents.antigravity-cli
 
     # Sandboxing for agent-run commands. Claude Code's sandbox and the
