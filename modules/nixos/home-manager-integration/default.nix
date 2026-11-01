@@ -18,5 +18,8 @@
 
     # Let home modules use flake inputs, such as packages from other flakes.
     extraSpecialArgs = { inherit inputs; };
+
+    # Move a file in the way of a new link aside instead of stopping the switch.
+    backupFileExtension = "hm-backup";
   };
 }
