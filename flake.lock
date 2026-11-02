@@ -106,6 +106,29 @@
         "type": "github"
       }
     },
+    "herdr-needs-action": {
+      "inputs": {
+        "herdr-pkgs": [
+          "llm-agents"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793861117,
+        "narHash": "sha256-1PyYhFxoG5ww9XVRofs7HcXwOyPdmWhSSxUtQrwYmsA=",
+        "owner": "RheoTommy",
+        "repo": "herdr-needs-action",
+        "rev": "fbe60e79f9890ce68fb999d58d73f4a281213850",
+        "type": "github"
+      },
+      "original": {
+        "owner": "RheoTommy",
+        "repo": "herdr-needs-action",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -229,6 +252,7 @@
     "root": {
       "inputs": {
         "disko": "disko",
+        "herdr-needs-action": "herdr-needs-action",
         "home-manager": "home-manager",
         "lanzaboote": "lanzaboote",
         "llm-agents": "llm-agents",

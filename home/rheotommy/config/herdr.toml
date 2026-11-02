@@ -14,6 +14,14 @@ delivery = "system"
 [ui.sidebar.spaces]
 rows = [["state_icon", "workspace"], ["branch", "$jj", "git_status"]]
 
+# $needs_action comes from the herdr-needs-action plugin. Its fg is the
+# theme's red written out, since fg takes only a hex color, not a theme's.
+[ui.sidebar.agents]
+rows = [
+  ["state_icon", "machine", "workspace", "tab"],
+  ["agent", { token = "$needs_action", fg = "#d20f39", bold = true }],
+]
+
 [keys]
 focus_pane_left  = ["prefix+h", "alt+left"]
 focus_pane_down  = ["prefix+j", "alt+down"]
@@ -27,3 +35,10 @@ next_tab     = ["prefix+n", "alt+shift+right"]
 
 previous_workspace = ["alt+shift+up"]
 next_workspace     = ["alt+shift+down"]
+
+# One stroke, and free in fish and Claude Code, which run in the panes.
+[[keys.command]]
+key = "alt+a"
+type = "plugin_action"
+command = "rheotommy.needs-action.toggle"
+description = "toggle the needs-action mark"

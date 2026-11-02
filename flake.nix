@@ -24,6 +24,14 @@
     # Coding agents and their companion tools, updated daily. Its own pinned
     # nixpkgs is kept so the prebuilt binaries in its cache match.
     llm-agents.url = "github:numtide/llm-agents.nix";
+    # Marks herdr agent panes that need action. It takes herdr for its
+    # integration check from llm-agents, as we do, so that the check runs the
+    # herdr installed here.
+    herdr-needs-action = {
+      url = "github:RheoTommy/herdr-needs-action";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.herdr-pkgs.follows = "llm-agents";
+    };
   };
 
   outputs =
@@ -57,6 +65,7 @@
       checks.${system} = {
         herdr-ovis = import ./tests/herdr-ovis.nix { inherit inputs pkgs; };
         job-alerts = import ./tests/job-alerts.nix { inherit pkgs; };
+        herdr-needs-action = inputs.herdr-needs-action.checks.${system}.integration;
         # A copy, since treefmt rewrites files in place and the source is
         # read-only.
         formatting = pkgs.runCommand "formatting" { nativeBuildInputs = [ pkgs.nixfmt-tree ]; } ''

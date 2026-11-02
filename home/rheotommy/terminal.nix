@@ -11,10 +11,18 @@ let
   inherit (pkgs.stdenv.hostPlatform) system;
   herdr = inputs.llm-agents.packages.${system}.herdr;
   ovis = inputs.self.packages.${system}.ovis;
+  needsAction = inputs.herdr-needs-action.packages.${system}.default;
 in
 {
   home.packages = [ herdr ];
   xdg.configFile."herdr/config.toml".source = ./config/herdr.toml;
+
+  # herdr keeps its plugin registry in a file it rewrites itself, so the
+  # plugin is linked with herdr's CLI rather than placed as a file. herdr
+  # records the resolved store path, so every switch links it again.
+  home.activation.linkHerdrNeedsAction = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    run --quiet ${lib.getExe herdr} plugin link ${needsAction}/${needsAction.pluginPath}
+  '';
 
   # jj leaves git's HEAD detached, so herdr's branch token stays empty in jj
   # repositories.
