@@ -1,8 +1,11 @@
 # Records the Wi-Fi, the line and DNS once a minute with Gatus, so that a slow
-# network can be traced to one of them.
-{ ... }:
+# network can be traced to one of them. The status page is served to the
+# tailnet only.
+{ config, lib, ... }:
 
 let
+  tailscale = lib.getExe config.services.tailscale.package;
+  port = 7318;
   network =
     endpoint:
     {
@@ -28,7 +31,7 @@ in
     settings = {
       web = {
         address = "127.0.0.1";
-        port = 7318;
+        inherit port;
       };
       storage = {
         type = "sqlite";
@@ -57,5 +60,22 @@ in
         (resolve "dns-upstream" "76.76.2.2")
       ];
     };
+  };
+
+  systemd.services.tailscale-serve-gatus = {
+    description = "Serve Gatus to the tailnet";
+    after = [ "tailscaled.service" ];
+    wants = [ "tailscaled.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+    # Not 443: tailscale-serve-ovis serves Ovis there, and whichever of the two
+    # runs last would replace the other.
+    script = ''
+      ${tailscale} wait --timeout=2m
+      ${tailscale} serve --bg --yes --https=8443 http://127.0.0.1:${toString port}
+    '';
   };
 }
