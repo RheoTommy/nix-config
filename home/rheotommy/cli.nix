@@ -8,7 +8,14 @@
     pkgs.fd
     pkgs.jq
     pkgs.curl
-    pkgs.unzip
+    # Without NO_WORKING_ISPRINT, `unzip -l` and `unzip -Z1` print each
+    # non-ASCII byte of a name as `?`. Debian and Ubuntu build with it:
+    # https://bugs.launchpad.net/ubuntu/+source/unzip/+bug/1199239
+    # Not an overlay, which would also rebuild every package that unpacks
+    # its source with unzip.
+    (pkgs.unzip.overrideAttrs (old: {
+      NIX_CFLAGS_COMPILE = toString (old.NIX_CFLAGS_COMPILE or "") + " -DNO_WORKING_ISPRINT";
+    }))
 
     # Editing and viewing
     pkgs.glow
