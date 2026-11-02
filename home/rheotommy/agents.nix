@@ -51,7 +51,6 @@ in
     lib.mapAttrs (_: path: { source = config.lib.file.mkOutOfStoreSymlink "${agentConfig}/${path}"; })
       {
         ".claude/CLAUDE.md" = "AGENTS.md";
-        ".claude/settings.json" = "claude/settings.json";
         ".claude/statusline.sh" = "claude/statusline.sh";
         ".claude/hooks" = "claude/hooks";
         # Not the shared skills directory: Claude Code also syncs skills from
@@ -75,4 +74,15 @@ in
         # writes, so its whole directory is linked.
         ".gemini/config" = "antigravity/config";
       };
+
+  # Not in home.file: Claude Code follows only one level of the link when it
+  # saves this file, then writes its temporary file into the read-only store
+  # directory. A direct link keeps /effort and the permission prompts working.
+  home.activation.linkClaudeSettings = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    target=$HOME/.claude/settings.json
+    if [ -e "$target" ] && [ ! -L "$target" ]; then
+      run mv "$target" "$target.bak"
+    fi
+    run ln -sfn ${agentConfig}/claude/settings.json "$target"
+  '';
 }
