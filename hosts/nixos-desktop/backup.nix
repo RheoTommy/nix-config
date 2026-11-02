@@ -91,4 +91,13 @@ in
   };
   # Skip rather than fail while the drive is unplugged.
   systemd.services.restic-backups-iodata.unitConfig.ConditionPathExists = "/dev/disk/by-label/backup";
+
+  # The hours each job may go without succeeding: its period, plus room for a
+  # late or slow run. Leaving the drive unplugged for over a day alerts too,
+  # as a reminder to plug it back in.
+  jobAlerts.jobs = {
+    btrbk-home = 2;
+    restic-backups-iodata = 30;
+    restic-backups-gdrive = 8 * 24;
+  };
 }

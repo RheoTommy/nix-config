@@ -6,6 +6,7 @@
     # Shared policy is imported explicitly so each future host controls its scope.
     ../../modules/nixos/common
     ../../modules/nixos/home-manager-integration
+    ../../modules/nixos/job-alerts
     ../../modules/nixos/remote-access
     ./backup.nix
     ./disko.nix
