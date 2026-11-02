@@ -10,6 +10,7 @@
     ./backup.nix
     ./disko.nix
     ./hardware-configuration.nix
+    ./monitoring.nix
     ./secure-boot.nix
   ];
 
