@@ -5,12 +5,6 @@
 # by a condition. Gatus shows the reports and turns failures into
 # notifications. Gatus cannot report its own failure, so that goes to ntfy
 # directly.
-#
-# The secrets stay outside the store and are created by hand once, before the
-# first switch, since Gatus does not start without them:
-#   /etc/gatus/env  NTFY_TOPIC=<topic>   the ntfy topic, also kept in 1Password
-#                   GATUS_TOKEN=<random> lets the reports reach Gatus
-# Restart Gatus after changing it.
 {
   config,
   lib,
@@ -21,7 +15,7 @@
 let
   cfg = config.jobAlerts;
   curl = lib.getExe pkgs.curl;
-  secrets = "/etc/gatus/env";
+  secrets = cfg.environmentFile;
   state = "/var/lib/job-alerts";
   gatus = "http://127.0.0.1:${toString config.services.gatus.settings.web.port}";
 
@@ -59,6 +53,14 @@ in
         btrbk-home = 2;
       };
       description = "The systemd services to watch, each with the hours it may go without succeeding.";
+    };
+    environmentFile = lib.mkOption {
+      type = lib.types.str;
+      description = ''
+        A file that sets NTFY_TOPIC, the secret ntfy topic, and GATUS_TOKEN, a
+        random token that lets the reports reach Gatus. It stays outside the
+        store, and Gatus does not start without it.
+      '';
     };
     ntfyUrl = lib.mkOption {
       type = lib.types.str;

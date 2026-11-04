@@ -7,11 +7,13 @@
     ../../modules/nixos/common
     ../../modules/nixos/home-manager-integration
     ../../modules/nixos/job-alerts
+    ../../modules/nixos/op-secrets
     ../../modules/nixos/remote-access
     ./backup.nix
     ./disko.nix
     ./hardware-configuration.nix
     ./monitoring.nix
+    ./secrets.nix
     ./secure-boot.nix
   ];
 

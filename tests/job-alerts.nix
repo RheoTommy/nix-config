@@ -25,6 +25,7 @@ pkgs.testers.runNixOSTest {
       };
     };
     jobAlerts = {
+      environmentFile = "/etc/gatus/env";
       ntfyUrl = "http://127.0.0.1:2586";
       jobs = {
         probe-ok = 1;
