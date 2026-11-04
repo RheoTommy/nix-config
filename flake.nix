@@ -65,6 +65,7 @@
       checks.${system} = {
         herdr-ovis = import ./tests/herdr-ovis.nix { inherit inputs pkgs; };
         job-alerts = import ./tests/job-alerts.nix { inherit pkgs; };
+        op-secrets = import ./tests/op-secrets.nix { inherit pkgs; };
         podman-registries = import ./tests/podman-registries.nix { inherit pkgs; };
         herdr-needs-action = inputs.herdr-needs-action.checks.${system}.integration;
         # A copy, since treefmt rewrites files in place and the source is
