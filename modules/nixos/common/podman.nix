@@ -20,9 +20,7 @@
 
   # Resolve short image names such as `node:22` on Docker Hub, as Docker does.
   # Dockerfiles and tools written for Docker rely on it.
-  virtualisation.containers.registries.settings.registries.search.registries = [
-    "docker.io"
-  ];
+  virtualisation.containers.registries.settings.unqualified-search-registries = [ "docker.io" ];
 
   # Serve each user's rootless Podman through the Docker API socket, so tools
   # that talk to Docker directly, such as testcontainers, find it.
