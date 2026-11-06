@@ -54,6 +54,14 @@
       [Desktop Entry]
       Hidden=true
     '';
+    # Baloo indexes the whole home by default, where source trees change far
+    # too often for its index. An allowlist also keeps out directories that
+    # do not exist yet, which an exclude list could not name in advance.
+    "xdg/baloofilerc".text = ''
+      [General]
+      folders[$e]=$HOME/Desktop/,$HOME/Documents/,$HOME/Downloads/,$HOME/Music/,$HOME/Pictures/,$HOME/Videos/
+      only basic indexing=true
+    '';
   };
 
   # Only the account is declared here. Its home environment is managed by a
