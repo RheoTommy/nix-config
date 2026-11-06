@@ -1,6 +1,7 @@
-# Records the Wi-Fi, the line and DNS once a minute with Gatus, so that a slow
-# network can be traced to one of them. The status page is served to the
-# tailnet only.
+# Records how this machine behaves, so that a problem can be traced afterwards.
+# Gatus checks the Wi-Fi, the line and DNS once a minute, and below keeps the
+# CPU, memory and I/O of every cgroup, which covers any unit without a monitor
+# written for it. The Gatus status page is served to the tailnet only.
 { config, lib, ... }:
 
 let
@@ -26,6 +27,18 @@ let
     };
 in
 {
+  services.below = {
+    enable = true;
+    # Off by default, which would leave only whole-disk writes: not enough to
+    # tell which unit is writing.
+    collect.ioStats = true;
+    compression.enable = true;
+    retention = {
+      time = 14 * 24 * 60 * 60;
+      size = 30 * 1024 * 1024 * 1024;
+    };
+  };
+
   services.gatus = {
     enable = true;
     settings = {
