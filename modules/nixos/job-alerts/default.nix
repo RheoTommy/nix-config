@@ -20,10 +20,11 @@ let
   gatus = "http://127.0.0.1:${toString config.services.gatus.settings.web.port}";
 
   # Reports job $1 to Gatus as succeeded ($2 = true) or failed with reason $3.
-  # The retries cover a report sent while Gatus restarts, as on a switch.
+  # The retries cover a report sent while Gatus restarts, as on a switch. The
+  # token goes through stdin since any user can read a command's arguments.
   push = pkgs.writeShellScript "job-alerts-push" ''
-    ${curl} -fsS --retry 5 --retry-connrefused --retry-delay 5 -X POST \
-      -H "Authorization: Bearer $GATUS_TOKEN" \
+    printf 'Authorization: Bearer %s\n' "$GATUS_TOKEN" |
+    ${curl} --header @- -fsS --retry 5 --retry-connrefused --retry-delay 5 -X POST \
       --url-query "success=$2" --url-query "error=''${3:-}" \
       "${gatus}/api/v1/endpoints/jobs_$1/external"
   '';
@@ -154,12 +155,13 @@ in
             Type = "oneshot";
             EnvironmentFile = secrets;
           };
-          # The network may be down too, so keep trying for a while.
+          # The network may be down too, so keep trying for a while. The topic
+          # goes through stdin since any user can read a command's arguments.
           script = ''
-            ${curl} -fsS --retry 10 --retry-delay 30 --retry-all-errors \
+            printf 'url = "${cfg.ntfyUrl}/%s"\n' "$NTFY_TOPIC" |
+            ${curl} --config - -fsS --retry 10 --retry-delay 30 --retry-all-errors \
               -H "Title: Gatus failed on ${config.networking.hostName}" \
-              -d "Job alerts are off until it runs again. See journalctl -u gatus." \
-              "${cfg.ntfyUrl}/$NTFY_TOPIC"
+              -d "Job alerts are off until it runs again. See journalctl -u gatus."
           '';
         };
       }
