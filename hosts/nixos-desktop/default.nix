@@ -8,10 +8,12 @@
     ../../modules/nixos/home-manager-integration
     ../../modules/nixos/job-alerts
     ../../modules/nixos/op-secrets
+    ../../modules/nixos/scheduled-jobs
     ../../modules/nixos/remote-access
     ./backup.nix
     ./disko.nix
     ./hardware-configuration.nix
+    ./jobs.nix
     ./monitoring.nix
     ./secrets.nix
     ./secure-boot.nix

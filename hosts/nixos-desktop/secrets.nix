@@ -11,6 +11,8 @@
       services = [ "gatus" ];
     };
     restic-password.template = "{{ op://nixos-desktop/restic-password/password }}";
+    calendar-id.template = "{{ op://nixos-desktop/calendar-id/password }}";
+    calendar-service-account.template = "{{ op://nixos-desktop/calendar-service-account/notesPlain }}";
   };
   jobAlerts = {
     environmentFile = config.opSecrets.files.gatus-env.path;
