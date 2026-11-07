@@ -27,9 +27,9 @@
           onCalendar = "Mon,Thu 07:00";
           maxHoursWithoutSuccess = 120;
         };
-        inbox-watchdog = {
-          onCalendar = "Mon,Thu 07:00";
-          maxHoursWithoutSuccess = 120;
+        inbox-watch-claude = {
+          onCalendar = "Mon 08:00";
+          maxHoursWithoutSuccess = 192;
         };
       };
 }
