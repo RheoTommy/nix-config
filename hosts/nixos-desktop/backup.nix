@@ -1,10 +1,16 @@
 # Keeps hourly snapshots of /home on the system drive, and backs /home up with
 # restic to the IODATA USB drive daily and to Google Drive weekly.
 #
-# Secrets stay outside the store and are created by hand once:
-#   /etc/restic/password     the restic repository password (also kept in 1Password)
-#   /etc/restic/rclone.conf  the rclone remote "gdrive", from `rclone config`
-{ lib, pkgs, ... }:
+# The rclone config stays a file created by hand, from `rclone config`, unlike
+# the secrets in 1Password: rclone rewrites it, so 1Password could not hold the
+# current copy, and signing in again recovers it.
+#   /etc/restic/rclone.conf  the rclone remote "gdrive"
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   btrfs = lib.getExe' pkgs.btrfs-progs "btrfs";
@@ -25,7 +31,7 @@ let
         ".venv"
         ".direnv"
       ];
-      passwordFile = "/etc/restic/password";
+      passwordFile = config.opSecrets.files.restic-password.path;
       initialize = true;
       backupPrepareCommand = ''
         if [ -e ${snapshot} ]; then ${btrfs} subvolume delete ${snapshot}; fi

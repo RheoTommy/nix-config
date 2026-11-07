@@ -2,12 +2,15 @@
 { config, ... }:
 
 {
-  opSecrets.files.gatus-env = {
-    template = ''
-      NTFY_TOPIC={{ op://nixos-desktop/ntfy-topic/password }}
-      GATUS_TOKEN={{ op://nixos-desktop/gatus-token/password }}
-    '';
-    services = [ "gatus" ];
+  opSecrets.files = {
+    gatus-env = {
+      template = ''
+        NTFY_TOPIC={{ op://nixos-desktop/ntfy-topic/password }}
+        GATUS_TOKEN={{ op://nixos-desktop/gatus-token/password }}
+      '';
+      services = [ "gatus" ];
+    };
+    restic-password.template = "{{ op://nixos-desktop/restic-password/password }}";
   };
   jobAlerts = {
     environmentFile = config.opSecrets.files.gatus-env.path;
