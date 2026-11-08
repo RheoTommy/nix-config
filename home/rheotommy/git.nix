@@ -20,10 +20,8 @@
   programs.delta = {
     enable = true;
     enableGitIntegration = true;
-    options = {
-      light = true;
-      line-numbers = true;
-    };
+    # theme.nix sets the colors.
+    options.line-numbers = true;
   };
 
   programs.jujutsu = {

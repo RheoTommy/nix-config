@@ -30,13 +30,8 @@
     pkgs.awscli2
   ];
 
-  xdg.configFile."glow/glow.yml".source = (pkgs.formats.yaml { }).generate "glow-config" {
-    style = "light";
-  };
-
   programs.micro = {
     enable = true;
-    settings.colorscheme = "simple";
     # OSC 52, so that copying works through herdr and SSH too.
     settings.clipboard = "terminal";
   };

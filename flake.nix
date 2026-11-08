@@ -32,6 +32,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.herdr-pkgs.follows = "llm-agents";
     };
+    # Catppuccin themes for the tools that do not bundle them. main, not a
+    # release branch: the release branches target stable NixOS.
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

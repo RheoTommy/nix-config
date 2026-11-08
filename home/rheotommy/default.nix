@@ -11,6 +11,7 @@
     ./resources.nix
     ./apps.nix
     ./taildrop.nix
+    ./theme.nix
   ];
 
   home = {
