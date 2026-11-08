@@ -13,6 +13,7 @@
     ./backup.nix
     ./disko.nix
     ./hardware-configuration.nix
+    ./home-assistant.nix
     ./jobs.nix
     ./monitoring.nix
     ./secrets.nix
