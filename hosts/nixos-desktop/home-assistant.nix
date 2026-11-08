@@ -1,6 +1,5 @@
-# Runs Home Assistant, which controls the SwitchBot devices in the room over
-# Bluetooth without their hub or cloud, and serves its web UI to the tailnet
-# only.
+# Runs Home Assistant, which controls the SwitchBot devices in the room, and
+# serves its web UI to the tailnet only.
 {
   config,
   lib,
@@ -15,7 +14,12 @@ in
 {
   services.home-assistant = {
     enable = true;
-    extraComponents = options.services.home-assistant.extraComponents.default ++ [ "switchbot" ];
+    # The ceiling light is a Ceiling Light Pro, which the Bluetooth integration
+    # does not support, so it goes through SwitchBot's cloud instead.
+    extraComponents = options.services.home-assistant.extraComponents.default ++ [
+      "switchbot"
+      "switchbot_cloud"
+    ];
     # No http section: Home Assistant ignores it after a one-time import,
     # which reverts unless confirmed in the web UI. The firewall keeps the
     # default port closed to the LAN.
