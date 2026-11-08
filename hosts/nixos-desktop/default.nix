@@ -12,6 +12,7 @@
     ../../modules/nixos/remote-access
     ./backup.nix
     ./disko.nix
+    ./golink.nix
     ./hardware-configuration.nix
     ./home-assistant.nix
     ./jobs.nix
