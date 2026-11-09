@@ -53,6 +53,7 @@ in
         ".claude/CLAUDE.md" = "AGENTS.md";
         ".claude/statusline.sh" = "claude/statusline.sh";
         ".claude/hooks" = "claude/hooks";
+        ".claude/themes" = "claude/themes";
         # Not the shared skills directory: Claude Code also syncs skills from
         # claude.ai into it, which the other agents must not load.
         ".claude/skills" = "claude/skills";
