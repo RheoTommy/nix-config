@@ -23,8 +23,17 @@ jobs:
         run: nix flake update --commit-lock-file
       # After the lock update, because node_modules is installed with the bun
       # from the new lock. nix-update leaves no commit when nothing changed.
+      # Not the default releases.atom: upstream's beta tags crowd the stable
+      # releases out of that feed. The regex skips the non-Ovis releases, such
+      # as remote-v* and pty-sidecar-*, published from the same repository.
       - name: Bump Ovis
-        run: nix run --inputs-from . nixpkgs#nix-update -- --flake ovis --subpackage node_modules --commit
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: >-
+          nix run --inputs-from . nixpkgs#nix-update --
+          --flake ovis --subpackage node_modules
+          --use-github-releases --version-regex '^v(\d+\.\d+\.\d+)$'
+          --commit
       - name: Write the PR body
         run: git log --reverse --format='### %s%n%n%b' "origin/${GITHUB_REF_NAME}..HEAD" > "$RUNNER_TEMP/body.md"
       - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1

@@ -2,8 +2,8 @@
 #
 # The version stays as pinned until bumped by hand. To move to a new release,
 # change `version` and refresh the two hashes it fixes: the source and the
-# installed node_modules. `nix-update --flake ovis --subpackage node_modules`
-# does all three.
+# installed node_modules. The Bump Ovis step of .github/workflows/update.yml
+# does all three with nix-update.
 {
   lib,
   stdenv,
