@@ -30,10 +30,20 @@
   # Not virtualisation.podman.autoPrune: it runs as root and leaves each user's
   # rootless images alone.
   systemd.user.services.podman-prune = {
-    description = "Prune Podman images older than three days";
+    description = "Prune Podman images that no build has used for three days";
     serviceConfig = {
       Type = "oneshot";
-      ExecStart = "${lib.getExe config.virtualisation.podman.package} image prune --all --force --filter until=72h";
+      ExecStart = lib.getExe (
+        pkgs.writeShellApplication {
+          name = "podman-prune";
+          runtimeInputs = [
+            config.virtualisation.podman.package
+            pkgs.findutils
+            pkgs.jq
+          ];
+          text = builtins.readFile ./podman-prune.sh;
+        }
+      );
       IOSchedulingClass = "idle";
     };
     startAt = "daily";

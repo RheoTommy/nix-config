@@ -72,6 +72,7 @@
         herdr-ovis = import ./tests/herdr-ovis.nix { inherit inputs pkgs; };
         job-alerts = import ./tests/job-alerts.nix { inherit pkgs; };
         op-secrets = import ./tests/op-secrets.nix { inherit pkgs; };
+        podman-prune = import ./tests/podman-prune.nix { inherit pkgs; };
         podman-registries = import ./tests/podman-registries.nix { inherit pkgs; };
         scheduled-jobs = import ./tests/scheduled-jobs.nix { inherit pkgs; };
         herdr-needs-action = inputs.herdr-needs-action.checks.${system}.integration;
