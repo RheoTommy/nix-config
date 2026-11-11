@@ -65,6 +65,7 @@ in
         # hooks directory, and checks its version at this path.
         ".codex/herdr-agent-state.sh" = "codex/herdr-agent-state.sh";
         ".codex/skills" = "codex/skills";
+        ".codex/themes" = "codex/themes";
 
         # Of the three agents, only Codex reads this directory. The shared
         # skills go here rather than in ~/.codex/skills, which also holds the
