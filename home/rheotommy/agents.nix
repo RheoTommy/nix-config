@@ -4,6 +4,7 @@
   config,
   inputs,
   lib,
+  osConfig,
   pkgs,
   ...
 }:
@@ -19,6 +20,22 @@ let
   # of the store, because the agents, and sessions on request, edit these
   # files in place.
   agentConfig = "${config.home.homeDirectory}/ghq/github.com/RheoTommy/agent-config";
+
+  # Runs agy on a Gemini API key instead of the signed-in subscription. The
+  # provider is set for the one session, not in settings.json, which would
+  # move plain `agy` off the subscription too. The key comes from a file
+  # rather than `op run`, which needs the desktop app to approve it and so
+  # fails over SSH.
+  agyWithKey =
+    name: secret:
+    pkgs.writeShellApplication {
+      inherit name;
+      text = ''
+        GEMINI_API_KEY=$(< ${osConfig.opSecrets.files.${secret}.path})
+        export GEMINI_API_KEY
+        exec agy --settings '{"modelProvider":"gemini"}' "$@"
+      '';
+    };
 in
 {
   home.packages = [
@@ -26,6 +43,8 @@ in
     llmAgents.codex
     llmAgents.chatgpt
     llmAgents.antigravity-cli
+    (agyWithKey "agyp" "gemini-api-key-personal")
+    (agyWithKey "agyw" "gemini-api-key-work")
 
     # Sandboxing for agent-run commands. Claude Code's sandbox and the
     # sandbox-runtime CLI (srt) isolate commands with bubblewrap and relay
