@@ -18,13 +18,13 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "ovis";
-  version = "0.4.21";
+  version = "0.5.2";
 
   src = fetchFromGitHub {
     owner = "devswha";
     repo = "herdr-web-ui";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-7FK+Dtqzm8vleY6OQBm4efqp/82KHkcS1ZE8pftlOyg=";
+    hash = "sha256-RJI/KywvzCa7MALzcDZz+8G51V7N/ze/joUi86z3rTc=";
   };
 
   nativeBuildInputs = [
@@ -105,7 +105,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
       # derivation may not reference.
       dontFixup = true;
 
-      outputHash = "sha256-tEU+W06OSYK8EoP5EyzHHxDPY3if6skZJ2Sl7jGa6LY=";
+      outputHash = "sha256-I04k5osKQhXYkPZWCH3LtPiflCIgYJhq2pk7NpumUno=";
       outputHashAlgo = "sha256";
       outputHashMode = "recursive";
     };
