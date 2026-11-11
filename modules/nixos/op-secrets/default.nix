@@ -1,7 +1,7 @@
-# Writes secrets from 1Password to files that root services read, at boot and
-# every six hours. A service account reads them, since a service cannot wait
-# for someone to approve the desktop app. Its token is the one secret created
-# by hand, once, before the first switch:
+# Writes secrets from 1Password to files that root services read: at boot,
+# every six hours, and when their definitions change. A service account reads
+# them, since a service cannot wait for someone to approve the desktop app. Its
+# token is the one secret created by hand, once, before the first switch:
 #   /etc/op-secrets/token  the token of a service account that can read only
 #                          the vault the secrets live in
 {
@@ -71,7 +71,6 @@ in
       {
         op-secrets = {
           description = "Write secrets from 1Password to files";
-          wantedBy = [ "multi-user.target" ];
           wants = [ "network-online.target" ];
           after = [ "network-online.target" ];
           path = [
@@ -150,6 +149,20 @@ in
           # Here rather than in the script, so that it also runs after a kill.
           postStop = "rm -f ${dir}/*.new";
         };
+        # The fetch is not itself wanted by multi-user.target: every switch
+        # starts the inactive units that target wants, so each one would wait
+        # for a fetch of every secret. This unit stays active once the fetch
+        # has run, and a switch restarts it only when the definitions change.
+        op-secrets-ready = {
+          description = "Write secrets from 1Password once they are defined";
+          wantedBy = [ "multi-user.target" ];
+          restartTriggers = [ (builtins.toJSON fetchLines) ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            ExecStart = "${lib.getExe' config.systemd.package "systemctl"} start op-secrets.service";
+          };
+        };
       }
       (lib.mkMerge (
         lib.mapAttrsToList (
@@ -158,7 +171,11 @@ in
           # of the service, and a slow one would space out a crash loop enough
           # to stay under the service's start limit.
           lib.genAttrs file.services (_: {
-            after = [ "op-secrets.service" ];
+            after = [
+              "op-secrets.service"
+              # At boot this one is queued first, and starts the fetch.
+              "op-secrets-ready.service"
+            ];
           })
         ) cfg.files
       ))
