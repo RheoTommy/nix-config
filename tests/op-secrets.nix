@@ -42,12 +42,19 @@ pkgs.testers.runNixOSTest {
           services = [ "app" ];
         };
         other.template = "{{ op://vault/other/password }}";
+        for-alice = {
+          template = "{{ op://vault/alice/password }}";
+          owner = "alice";
+        };
       };
     };
     environment.etc."op-secrets/token" = {
       text = "test-token";
       mode = "0600";
     };
+
+    users.users.alice.isNormalUser = true;
+    users.users.bob.isNormalUser = true;
 
     systemd.services.app = {
       wantedBy = [ "multi-user.target" ];
@@ -83,8 +90,21 @@ pkgs.testers.runNixOSTest {
         fetched = int(show("ExecMainExitTimestampMonotonic", "op-secrets.service"))
         started = int(show("ExecMainStartTimestampMonotonic", "app.service"))
         assert 0 < fetched < started
-        machine.succeed('test "$(stat -c %a:%U ${path})" = 700:root')
+        machine.succeed('test "$(stat -c %a:%U ${path})" = 711:root')
         machine.succeed('test "$(stat -c %a:%U ${path}/app-env)" = 600:root')
+
+    with subtest("only its owner and root can read a file"):
+        machine.succeed("su alice -c 'grep -qx vault/alice/password@1 ${path}/for-alice'")
+        machine.fail("su bob -c 'cat ${path}/for-alice'")
+        machine.fail("su alice -c 'cat ${path}/app-env'")
+        machine.fail("su alice -c 'ls ${path}'")
+
+    with subtest("a changed owner gets a new file, even for an unchanged value"):
+        machine.succeed("chmod 666 ${path}/for-alice && chown root ${path}/for-alice")
+        before = machine.succeed("stat -c %i ${path}/for-alice")
+        fetch()
+        machine.succeed('test "$(stat -c %a:%U ${path}/for-alice)" = 600:alice')
+        assert machine.succeed("stat -c %i ${path}/for-alice") != before
 
     with subtest("an unchanged value leaves the services running"):
         before = invocation()
@@ -105,7 +125,10 @@ pkgs.testers.runNixOSTest {
     with subtest("a failed fetch keeps the previous value and fails the unit"):
         before = invocation()
         machine.succeed("touch /run/fake-op/down && echo 3 > /run/fake-op/version")
+        machine.succeed("chmod 666 ${path}/for-alice && chown root ${path}/for-alice")
         fetch("fail")
+        machine.succeed("grep -qx 'vault/alice/password@2' ${path}/for-alice")
+        machine.succeed('test "$(stat -c %a:%U ${path}/for-alice)" = 600:alice')
         machine.succeed("systemctl is-failed op-secrets.service")
         machine.succeed("grep -qx 'SECRET=vault/app/password@2' ${path}/app-env")
         machine.succeed("test ! -e ${path}/app-env.new")
