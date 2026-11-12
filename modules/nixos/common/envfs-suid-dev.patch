@@ -1,0 +1,87 @@
+diff -ru a/src/fs.rs b/src/fs.rs
+--- a/src/fs.rs	2026-11-12 18:15:47.718022248 +0900
++++ b/src/fs.rs	2026-11-12 18:15:47.740013028 +0900
+@@ -169,7 +169,12 @@
+         }
+     }
+ 
+-    pub fn mount(self, mountpoints: &[PathBuf]) -> Result<fuser::BackgroundSession> {
++    pub fn mount(
++        self,
++        mountpoints: &[PathBuf],
++        suid: bool,
++        dev: bool,
++    ) -> Result<fuser::BackgroundSession> {
+         assert!(!mountpoints.is_empty());
+ 
+         let (ready, ready_recv) = mpsc::channel();
+@@ -188,6 +193,12 @@
+             fuser::MountOption::DefaultPermissions,
+             fuser::MountOption::RO,
+         ];
++        if suid {
++            config.mount_options.push(fuser::MountOption::Suid);
++        }
++        if dev {
++            config.mount_options.push(fuser::MountOption::Dev);
++        }
+         config.acl = fuser::SessionACL::All;
+ 
+         let session = try_with!(
+diff -ru a/src/main.rs b/src/main.rs
+--- a/src/main.rs	2026-11-12 18:15:47.718022248 +0900
++++ b/src/main.rs	2026-11-12 18:15:47.739527724 +0900
+@@ -32,6 +32,8 @@
+     show_help: bool,
+     foreground: bool,
+     remount: bool,
++    suid: bool,
++    dev: bool,
+     fallback_paths: Vec<PathBuf>,
+     args: Vec<String>,
+ }
+@@ -106,7 +108,7 @@
+     // and the signals are only consumed by sigwait() in wait_for_shutdown.
+     try_with!(shutdown_signals().thread_block(), "cannot block signals");
+ 
+-    let session = try_with!(fs.mount(&opts.mountpoints), "cannot start fuse sessions");
++    let session = try_with!(fs.mount(&opts.mountpoints, opts.suid, opts.dev), "cannot start fuse sessions");
+     let dev = try_with!(
+         std::fs::metadata(&opts.mountpoints[0]),
+         "cannot stat {}",
+@@ -160,6 +162,7 @@
+     eprintln!("                       (can be passed multiple times)");
+     eprintln!("-o bind-mount=PATH     Bind mount PATH with envfs");
+     eprintln!("                       (can be passed multiple times)");
++    eprintln!("-o suid,dev            Do not mount with nosuid or nodev");
+ }
+ 
+ fn parse_mount_options(mount_options: &str, opts: &mut Options) -> Result<()> {
+@@ -174,6 +177,18 @@
+             "debug" => {
+                 opts.debug = true;
+             }
++            "suid" => {
++                opts.suid = true;
++            }
++            "nosuid" => {
++                opts.suid = false;
++            }
++            "dev" => {
++                opts.dev = true;
++            }
++            "nodev" => {
++                opts.dev = false;
++            }
+             "bind-mount" => {
+                 if mount_opt.len() != 2 {
+                     bail!("bind-mount needs an argument");
+@@ -202,6 +217,8 @@
+         show_help: false,
+         foreground: false,
+         remount: false,
++        suid: false,
++        dev: false,
+         fallback_paths: vec![],
+         args: vec![],
+     };
