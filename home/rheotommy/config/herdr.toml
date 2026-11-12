@@ -33,8 +33,8 @@ split_vertical = ["prefix+v", "alt+n"]
 previous_tab = ["prefix+p", "alt+shift+left"]
 next_tab     = ["prefix+n", "alt+shift+right"]
 
-previous_workspace = ["alt+shift+up"]
-next_workspace     = ["alt+shift+down"]
+previous_agent = ["alt+shift+up"]
+next_agent     = ["alt+shift+down"]
 
 # One stroke, and free in fish and Claude Code, which run in the panes.
 [[keys.command]]
