@@ -35,21 +35,6 @@
   # vendor CLIs) fail to start. nix-ld provides that loader path together with
   # a baseline set of shared libraries.
   programs.nix-ld.enable = true;
-  # Scripts and tools written for other distributions call programs by fixed
-  # paths such as /bin/bash or /usr/bin/bwrap. envfs serves /bin and /usr/bin
-  # by looking each name up in the calling process's PATH.
-  services.envfs.enable = true;
-  # envfs serves only symlinks, so suid and dev give nothing away. Without them,
-  # Antigravity's terminal sandbox cannot remount /bin read-only and won't start.
-  # TODO: Drop them once agy keeps nosuid and nodev when it remounts.
-  fileSystems."/usr/bin".options = [
-    "suid"
-    "dev"
-  ];
-  fileSystems."/bin".options = [
-    "suid"
-    "dev"
-  ];
 
   # Libraries for the Chromium that Playwright downloads for browser tests.
   programs.nix-ld.libraries = [

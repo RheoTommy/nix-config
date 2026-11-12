@@ -4,6 +4,7 @@
 {
   imports = [
     ./nix.nix
+    ./envfs.nix
     ./system.nix
     ./desktop.nix
     ./podman.nix
