@@ -21,6 +21,19 @@ let
   # files in place.
   agentConfig = "${config.home.homeDirectory}/ghq/github.com/RheoTommy/agent-config";
 
+  # agy's terminal sandbox does not mount /run, so /run/current-system/sw/bin
+  # on PATH is missing inside it and no command starts, not even bash. /nix is
+  # mounted, so the store path that the link resolves to works there.
+  # TODO: Drop the wrapper once the antigravity-cli package or agy handles
+  # this.
+  agy = pkgs.writeShellApplication {
+    name = "agy";
+    text = ''
+      PATH="$PATH:$(${lib.getExe' pkgs.coreutils "realpath"} /run/current-system/sw/bin)"
+      exec ${lib.getExe' llmAgents.antigravity-cli "agy"} "$@"
+    '';
+  };
+
   # Runs agy on a Gemini API key instead of the signed-in subscription. The
   # provider is set for the one session, not in settings.json, which would
   # move plain `agy` off the subscription too. The key comes from a file
@@ -44,7 +57,7 @@ let
       text = ''
         GEMINI_API_KEY=$(< ${osConfig.opSecrets.files.${secret}.path})
         export GEMINI_API_KEY
-        exec agy --settings ${lib.escapeShellArg agyKeySettings} "$@"
+        exec ${lib.getExe agy} --settings ${lib.escapeShellArg agyKeySettings} "$@"
       '';
     };
 in
@@ -53,7 +66,7 @@ in
     llmAgents.claude-code
     llmAgents.codex
     llmAgents.chatgpt
-    llmAgents.antigravity-cli
+    agy
     (agyWithKey "agyp" "gemini-api-key-personal")
     (agyWithKey "agyw" "gemini-api-key-work")
 
