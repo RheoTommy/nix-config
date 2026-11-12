@@ -69,7 +69,7 @@
       formatter.${system} = pkgs.nixfmt-tree;
 
       checks.${system} = {
-        envfs-mount-flags = import ./tests/envfs-mount-flags.nix { inherit pkgs; };
+        envfs-statfs = import ./tests/envfs-statfs.nix { inherit pkgs; };
         herdr-ovis = import ./tests/herdr-ovis.nix { inherit inputs pkgs; };
         job-alerts = import ./tests/job-alerts.nix { inherit pkgs; };
         op-secrets = import ./tests/op-secrets.nix { inherit pkgs; };

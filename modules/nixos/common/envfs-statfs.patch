@@ -1,0 +1,12 @@
+diff -ru a/src/fs.rs b/src/fs.rs
+--- a/src/fs.rs	2026-11-12 21:24:14.429725226 +0900
++++ b/src/fs.rs	2026-11-12 21:24:14.446387096 +0900
+@@ -697,7 +697,7 @@
+     }
+ 
+     fn statfs(&self, _req: &Request, _ino: INodeNo, reply: ReplyStatfs) {
+-        reply.error(FuseErrno::ENOENT);
++        reply.statfs(0, 0, 0, 0, 0, 512, 255, 0);
+     }
+ 
+     fn readdir(
