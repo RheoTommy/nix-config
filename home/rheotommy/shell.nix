@@ -23,6 +23,17 @@
         wl-copy
       end
     '';
+
+    # An abbreviation, not a function or an alias: `switch` is a fish keyword,
+    # which neither can be named after. The function makes it expand only in a
+    # checkout or a gwq worktree of this repository, so that the keyword still
+    # works everywhere else.
+    shellAbbrs.switch.function = "__nix_config_switch";
+    functions.__nix_config_switch = ''
+      string match -qr '/nix-config(/|$)' -- $PWD; or return 1
+      # Asks for the password first, not after the build.
+      echo 'sudo -v && nh os switch .'
+    '';
   };
 
   programs.starship = {
