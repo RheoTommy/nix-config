@@ -27,22 +27,6 @@ let
     };
 in
 {
-  # An overlay, because the below module has no package option. below in
-  # nixpkgs from November 2026 lacks the zstd that its zstd-sys crate looks for
-  # and fails to build. NixOS/nixpkgs#586021 adds it; once that reaches the
-  # lock, this overlay leaves below as it is and warns.
-  nixpkgs.overlays = [
-    (final: prev: {
-      below =
-        if lib.any (input: lib.getName input == "zstd") prev.below.buildInputs then
-          lib.warn "below in nixpkgs now has zstd: remove the overlay in hosts/nixos-desktop/monitoring.nix" prev.below
-        else
-          prev.below.overrideAttrs (old: {
-            buildInputs = old.buildInputs ++ [ final.zstd ];
-          });
-    })
-  ];
-
   services.below = {
     enable = true;
     # Off by default, which would leave only whole-disk writes: not enough to
