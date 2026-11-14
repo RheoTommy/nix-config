@@ -28,12 +28,19 @@
   # room to reclaim idle pages without a disk-backed swap device. The default
   # size (50% of RAM) is enough for now.
   zramSwap.enable = true;
-  # The kernel defaults assume swap on a disk. Swapping to zram costs only
-  # compression, so prefer it over dropping file cache, and read back one page
-  # at a time since readahead saves no seek on memory.
   boot.kernel.sysctl = {
+    # The kernel defaults assume swap on a disk. Swapping to zram costs only
+    # compression, so prefer it over dropping file cache, and read back one page
+    # at a time since readahead saves no seek on memory.
     "vm.swappiness" = 180;
     "vm.page-cluster" = 0;
+
+    # By default the kernel kills the task that hit an oops and keeps running.
+    # That can leave this host half alive and out of reach until someone
+    # resets it by hand, so reboot instead. pstore keeps the oops log, which
+    # the journal cannot record once the kernel has panicked.
+    "kernel.panic_on_oops" = 1;
+    "kernel.panic" = 10;
   };
 
   # Keep this host reachable over SSH; display blanking remains controlled by
