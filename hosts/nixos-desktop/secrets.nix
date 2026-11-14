@@ -13,6 +13,10 @@
     restic-password.template = "{{ op://nixos-desktop/restic-password/password }}";
     calendar-id.template = "{{ op://nixos-desktop/calendar-id/password }}";
     calendar-service-account.template = "{{ op://nixos-desktop/calendar-service-account/notesPlain }}";
+    gws-client-secret = {
+      template = "{{ op://nixos-desktop/gws-client-secret/notesPlain }}";
+      owner = "rheotommy";
+    };
     # By item ID: the titles of these items hold parentheses, which a secret
     # reference cannot.
     gemini-api-key-personal = {
