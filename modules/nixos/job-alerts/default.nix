@@ -15,6 +15,7 @@
 let
   cfg = config.jobAlerts;
   curl = lib.getExe pkgs.curl;
+  flock = lib.getExe' pkgs.util-linux "flock";
   secrets = cfg.environmentFile;
   state = "/var/lib/job-alerts";
   gatus = "http://127.0.0.1:${toString config.services.gatus.settings.web.port}";
@@ -22,8 +23,14 @@ let
   # Reports job $1 to Gatus as succeeded ($2 = true) or failed with reason $3.
   # The retries cover a report sent while Gatus restarts, as on a switch. The
   # token goes through stdin since any user can read a command's arguments.
+  #
+  # One report at a time: Gatus marks an alert as sent only once ntfy has
+  # answered, and answers the report only after that. Two reports of the same
+  # failure that reach it together, as when a job fails in the second in which
+  # the hourly check runs, would each send a notification.
   push = pkgs.writeShellScript "job-alerts-push" ''
     printf 'Authorization: Bearer %s\n' "$GATUS_TOKEN" |
+    ${flock} ${state}/push.lock \
     ${curl} --header @- -fsS --retry 5 --retry-connrefused --retry-delay 5 -X POST \
       --url-query "success=$2" --url-query "error=''${3:-}" \
       "${gatus}/api/v1/endpoints/jobs_$1/external"

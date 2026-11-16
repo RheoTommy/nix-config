@@ -30,6 +30,7 @@ pkgs.testers.runNixOSTest {
       jobs = {
         probe-ok = 1;
         probe-fail = 1;
+        probe-race = 1;
         probe-skip = 2;
       };
     };
@@ -47,6 +48,10 @@ pkgs.testers.runNixOSTest {
         script = "true";
       };
       probe-fail = {
+        serviceConfig.Type = "oneshot";
+        script = "false";
+      };
+      probe-race = {
         serviceConfig.Type = "oneshot";
         script = "false";
       };
@@ -106,6 +111,18 @@ pkgs.testers.runNixOSTest {
         last_result("probe-fail", '.success == false and (.errors[0] | startswith("the last run failed"))')
         last_result("probe-ok", ".success")
         assert notifications("Gatus: jobs/probe-fail") == 1
+
+    with subtest("a failure reported twice at once is alerted once"):
+        # As when a job fails in the second in which the hourly check runs:
+        # the check reports the failure while the job's own report is still
+        # waiting for ntfy.
+        machine.succeed(
+            "systemctl start --no-block probe-race.service;"
+            " until [ -e /var/lib/job-alerts/probe-race.failed ]; do sleep 0.01; done;"
+            " systemctl start job-alerts-check.service"
+        )
+        wait_for_notification("Gatus: jobs/probe-race")
+        assert notifications("Gatus: jobs/probe-race") == 1
 
     with subtest("a skipped job records nothing"):
         machine.succeed("systemctl start probe-skip.service")

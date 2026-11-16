@@ -1,8 +1,11 @@
 # Stands in for ntfy: answers every publish and appends it to a log file, one
-# JSON object per line with its topic, title and message.
+# JSON object per line with its topic, title and message. It takes a second to
+# answer, as a server across the network takes a while, which leaves room for
+# whatever happens to the sender in the meantime.
 import http.server
 import json
 import sys
+import time
 
 port, log_path = int(sys.argv[1]), sys.argv[2]
 
@@ -22,6 +25,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             }
         with open(log_path, "a") as log:
             log.write(json.dumps(entry) + "\n")
+        time.sleep(1)
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
