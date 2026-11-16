@@ -44,6 +44,10 @@ pkgs.testers.runNixOSTest {
 
     machine.succeed("curl -sSf http://127.0.0.1:7317/ | grep -q '<div id=\"root\"'")
 
+    # Ovis keeps its state in the unit's state directory. Not a test that the
+    # directory exists: systemd creates it whether or not Ovis is told of it.
+    machine.succeed("test -n \"$(ls -A /home/alice/.local/state/ovis)\"")
+
     created = json.loads(machine.succeed("su - alice -c 'herdr workspace create'"))
     pane = created["result"]["root_pane"]["pane_id"]
     machine.succeed(f"python3 ${./ovis-attach.py} ws://127.0.0.1:7317/ws {pane}")
