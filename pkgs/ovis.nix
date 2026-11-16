@@ -1,4 +1,4 @@
-# Ovis (herdr-web-ui), a browser UI for herdr sessions.
+# Ovis, a browser UI for herdr sessions.
 #
 # The version stays as pinned until bumped by hand. To move to a new release,
 # change `version` and refresh the two hashes it fixes: the source and the
@@ -22,7 +22,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   src = fetchFromGitHub {
     owner = "devswha";
-    repo = "herdr-web-ui";
+    repo = "ovis";
     tag = "v${finalAttrs.version}";
     hash = "sha256-0g/FJe1ckwEj71ZO2N7t4kHP8mRIGUjRPJbylTM3l2s=";
   };
@@ -113,8 +113,8 @@ stdenvNoCC.mkDerivation (finalAttrs: {
 
   meta = {
     description = "Browser UI for herdr terminal sessions";
-    homepage = "https://github.com/devswha/herdr-web-ui";
-    changelog = "https://github.com/devswha/herdr-web-ui/blob/v${finalAttrs.version}/CHANGELOG.md";
+    homepage = "https://github.com/devswha/ovis";
+    changelog = "https://github.com/devswha/ovis/blob/v${finalAttrs.version}/CHANGELOG.md";
     license = lib.licenses.mit;
     platforms = [ "x86_64-linux" ];
     mainProgram = "ovis";
