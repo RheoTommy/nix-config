@@ -16,6 +16,7 @@
     ./hardware-configuration.nix
     ./home-assistant.nix
     ./jobs.nix
+    ./memory-fault-workaround
     ./monitoring.nix
     ./secrets.nix
     ./secure-boot.nix
