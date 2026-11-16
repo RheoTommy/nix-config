@@ -26,11 +26,12 @@ jobs:
       # Not the default releases.atom: upstream's beta tags crowd the stable
       # releases out of that feed. The regex skips the non-Ovis releases, such
       # as remote-v* and pty-sidecar-*, published from the same repository.
+      # Not nixpkgs#nix-update: a workaround, which pkgs/nix-update.nix explains.
       - name: Bump Ovis
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: >-
-          nix run --inputs-from . nixpkgs#nix-update --
+          nix run .#nix-update --
           --flake ovis --subpackage node_modules
           --use-github-releases --version-regex '^v(\d+\.\d+\.\d+)$'
           --commit

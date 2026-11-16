@@ -62,9 +62,12 @@
         nixos-desktop = nixosDesktop;
       };
 
-      # Exposed so the package can be built, and updated with nix-update, on its
-      # own.
-      packages.${system}.ovis = pkgs.callPackage ./pkgs/ovis.nix { };
+      packages.${system} = {
+        # Exposed so the package can be built, and updated with nix-update, on
+        # its own.
+        ovis = pkgs.callPackage ./pkgs/ovis.nix { };
+        nix-update = pkgs.callPackage ./pkgs/nix-update.nix { };
+      };
 
       formatter.${system} = pkgs.nixfmt-tree;
 
