@@ -34,4 +34,9 @@
   # use. Four passes write every bit as 0 and as 1, each time next to equal and
   # next to opposite bits: all zeros, all ones, 0x55.. and 0xaa...
   boot.kernelParams = [ "memtest=4" ];
+
+  # Monthly otherwise (../disko.nix). A scrub is what finds a block that went
+  # bad between its checksum and the disk, and the corruption check alerts on
+  # what the scrub logs.
+  services.btrfs.autoScrub.interval = "weekly";
 }
