@@ -83,12 +83,12 @@ in
         "HOST=127.0.0.1"
         "PORT=7317"
         "HERDR_SOCKET=%h/.config/herdr/herdr.sock"
-        "HERDR_WEB_HERDR_BIN=${lib.getExe herdr}"
+        "OVIS_HERDR_BIN=${lib.getExe herdr}"
         # The port tailscale-serve-ovis serves on.
-        "HERDR_WEB_TAILSCALE_HTTPS_PORT=443"
-        "HERDR_WEB_STATE_DIR=%S/ovis"
-        "HERDR_WEB_TELEMETRY=0"
-        "HERDR_WEB_AUTO_UPDATE=0"
+        "OVIS_TAILSCALE_HTTPS_PORT=443"
+        "OVIS_STATE_DIR=%S/ovis"
+        "OVIS_TELEMETRY=0"
+        "OVIS_AUTO_UPDATE=0"
       ];
       StateDirectory = "ovis";
       Restart = "on-failure";
