@@ -15,4 +15,18 @@
   imports = [ ./corruption-check.nix ];
 
   jobAlerts.jobs.kernel-corruption-check = 3;
+
+  # An oops already ends in a reboot (../default.nix). Corrupted memory can
+  # also hang the kernel without one, which would leave this host out of
+  # reach until someone resets it by hand, so reboot on a lockup too.
+  boot.kernel.sysctl = {
+    "kernel.softlockup_panic" = 1;
+    "kernel.hardlockup_panic" = 1;
+  };
+  # For a hang that the kernel cannot notice by itself.
+  systemd.settings.Manager.RuntimeWatchdogSec = "30s";
+  # systemd takes the first watchdog, which on this board is the one meant for
+  # recovering from failed overclocking. Leave it only iTCO_wdt, the
+  # general-purpose one.
+  boot.blacklistedKernelModules = [ "intel_oc_wdt" ];
 }
