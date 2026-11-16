@@ -29,4 +29,9 @@
   # recovering from failed overclocking. Leave it only iTCO_wdt, the
   # general-purpose one.
   boot.blacklistedKernelModules = [ "intel_oc_wdt" ];
+
+  # Tests all memory early in each boot, logs what fails and keeps it out of
+  # use. Four passes write every bit as 0 and as 1, each time next to equal and
+  # next to opposite bits: all zeros, all ones, 0x55.. and 0xaa...
+  boot.kernelParams = [ "memtest=4" ];
 }

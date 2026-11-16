@@ -13,7 +13,7 @@
 
       # journalctl prints what it finds, which puts it in this unit's log.
       if journalctl -k -q --no-pager \
-        -g 'Bad page state|list_(add|del) corruption|\[Hardware Error\]|BTRFS.*(csum failed|checksum error|corrupt)'
+        -g 'Bad page state|list_(add|del) corruption|bad mem addr|\[Hardware Error\]|BTRFS.*(csum failed|checksum error|corrupt)'
       then
         status=1
       fi

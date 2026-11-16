@@ -42,6 +42,7 @@ pkgs.testers.runNixOSTest {
     for report in [
         "Bad page state in process probe  pfn:206b9d",
         "list_del corruption. prev->next should be a, but was b",
+        "0000000012345000 bad mem addr 0x0000000012345000 - 0x0000000012346000 reserved",
         "[Hardware Error]: Machine check events logged",
         "BTRFS warning (device vda): csum failed root 5 ino 257 off 0 csum 0x1 expected csum 0x2 mirror 1",
         "BTRFS critical (device vda): corrupt leaf: root=5 block=1 slot=0",
