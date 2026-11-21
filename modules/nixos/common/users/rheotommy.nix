@@ -20,6 +20,8 @@
   # Allow rheotommy to use 1Password features backed by polkit.
   programs._1password-gui.polkitPolicyOwners = [ "rheotommy" ];
 
+  podmanPrune.users = [ "rheotommy" ];
+
   # Apply this user-scoped Home Manager module during the host NixOS activation.
   home-manager.users.rheotommy = import ../../../../home/rheotommy;
 }
