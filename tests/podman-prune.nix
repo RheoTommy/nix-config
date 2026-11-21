@@ -12,7 +12,10 @@ pkgs.testers.runNixOSTest {
   name = "podman-prune";
 
   nodes.machine = {
-    imports = [ ../modules/nixos/common/podman.nix ];
+    imports = [
+      ../modules/nixos/common/podman.nix
+      ../modules/nixos/common/podman-prune.nix
+    ];
     users.users.alice = {
       isNormalUser = true;
       linger = true;

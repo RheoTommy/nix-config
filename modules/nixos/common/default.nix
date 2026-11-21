@@ -8,6 +8,7 @@
     ./system.nix
     ./desktop.nix
     ./podman.nix
+    ./podman-prune.nix
     ./users/rheotommy.nix
   ];
 }

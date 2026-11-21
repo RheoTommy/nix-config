@@ -1,10 +1,5 @@
 # Provides the shared rootless container runtime.
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}:
+{ pkgs, ... }:
 
 {
   virtualisation.podman = {
@@ -26,29 +21,6 @@
   # that talk to Docker directly, such as testcontainers, find it.
   systemd.user.sockets.podman.wantedBy = [ "sockets.target" ];
   environment.sessionVariables.DOCKER_HOST = "unix://\${XDG_RUNTIME_DIR}/podman/podman.sock";
-
-  # Not virtualisation.podman.autoPrune: it runs as root and leaves each user's
-  # rootless images alone.
-  systemd.user.services.podman-prune = {
-    description = "Prune Podman images that no build has used for three days";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = lib.getExe (
-        pkgs.writeShellApplication {
-          name = "podman-prune";
-          runtimeInputs = [
-            config.virtualisation.podman.package
-            pkgs.findutils
-            pkgs.jq
-          ];
-          text = builtins.readFile ./podman-prune.sh;
-        }
-      );
-      IOSchedulingClass = "idle";
-    };
-    startAt = "daily";
-  };
-  systemd.user.timers.podman-prune.timerConfig.Persistent = true;
 
   # Run arm64 binaries through QEMU, so containers for arm64 targets can be
   # built here. Static emulators also work inside containers.
