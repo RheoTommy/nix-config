@@ -4,6 +4,11 @@
 {
   programs.git = {
     enable = true;
+    # Fallback so ad-hoc playwright-mcp runs without --output-dir cannot dirty
+    # repositories or be auto-tracked by jj.
+    ignores = [
+      ".playwright-mcp/"
+    ];
     settings = {
       user = {
         name = "Reo Hitomi";
