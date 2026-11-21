@@ -58,6 +58,10 @@ pkgs.testers.runNixOSTest {
     build("held", "localhost/base:1")
     alice("podman create --name holder localhost/held")
     alice("buildah from --name abandoned scratch")
+    # What an interrupted build leaves: the mount is gone with the build's
+    # namespace, but the container stays marked as mounted.
+    alice("buildah from --name mounted scratch")
+    alice("buildah unshare buildah mount mounted")
 
     machine.succeed("date -s '+4 days'")
     build("recent", "localhost/cache")
@@ -80,6 +84,7 @@ pkgs.testers.runNixOSTest {
 
     with subtest("only the build containers older than a day are removed"):
         assert not exists("container", "--external abandoned")
+        assert not exists("container", "--external mounted")
         assert exists("container", "--external running")
   '';
 }

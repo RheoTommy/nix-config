@@ -4,10 +4,12 @@
 now=$(date +%s)
 
 # Not younger ones: a build that is still running owns its container.
+# --force, since an interrupted build can leave its container marked as
+# mounted. Podman then refuses to remove it, and the others named with it.
 podman ps --all --external --format json |
   jq -r --argjson cutoff $((now - 24 * 3600)) \
     '.[] | select(.Status == "Storage" and .Created < $cutoff) | .Id' |
-  xargs --no-run-if-empty podman rm
+  xargs --no-run-if-empty podman rm --force
 
 # Podman records when an image was created but not when a build last used it.
 # A build that uses an image as cache creates a child of it, so an image counts
