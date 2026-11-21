@@ -3,13 +3,18 @@
 
 now=$(date +%s)
 
+# Every step runs even if an earlier one failed, and the failure is reported at
+# the end. Stopping at the first would let one container that will not go keep
+# the images from being pruned.
+status=0
+
 # Not younger ones: a build that is still running owns its container.
 # --force, since an interrupted build can leave its container marked as
 # mounted. Podman then refuses to remove it, and the others named with it.
 podman ps --all --external --format json |
   jq -r --argjson cutoff $((now - 24 * 3600)) \
     '.[] | select(.Status == "Storage" and .Created < $cutoff) | .Id' |
-  xargs --no-run-if-empty podman rm --force
+  xargs --no-run-if-empty podman rm --force || status=1
 
 # Podman records when an image was created but not when a build last used it.
 # A build that uses an image as cache creates a child of it, so an image counts
@@ -36,10 +41,12 @@ unused=$(
 # tagged for a registry has. Not rmi --force: it would also remove the
 # containers of a build that started to use the image after the listing above.
 jq -r '.[] | select(.Names | length > 1) | .Id' <<<"$unused" |
-  xargs --no-run-if-empty --max-args=1 podman untag
+  xargs --no-run-if-empty --max-args=1 podman untag || status=1
 
 # --ignore, since removing an image removes its unnamed parents with it. When
 # xargs splits a long list over several calls, a later call names images that
 # an earlier one has removed.
 jq -r '.[].Id' <<<"$unused" |
-  xargs --no-run-if-empty podman rmi --ignore
+  xargs --no-run-if-empty podman rmi --ignore || status=1
+
+exit "$status"
