@@ -38,5 +38,8 @@ unused=$(
 jq -r '.[] | select(.Names | length > 1) | .Id' <<<"$unused" |
   xargs --no-run-if-empty --max-args=1 podman untag
 
+# --ignore, since removing an image removes its unnamed parents with it. When
+# xargs splits a long list over several calls, a later call names images that
+# an earlier one has removed.
 jq -r '.[].Id' <<<"$unused" |
-  xargs --no-run-if-empty podman rmi
+  xargs --no-run-if-empty podman rmi --ignore
