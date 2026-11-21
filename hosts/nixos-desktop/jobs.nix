@@ -32,4 +32,8 @@
           maxHoursWithoutSuccess = 192;
         };
       };
+
+  # The daily prune that comes with Podman. The hours it may go without
+  # succeeding: its period, plus room for a late or slow run.
+  jobAlerts.jobs.podman-prune-rheotommy = 30;
 }
