@@ -73,6 +73,9 @@ in
     # Agent plugins run their hooks with node from PATH, outside any project,
     # where mise provides none.
     pkgs.nodejs
+
+    # Session-isolated headless browser MCP shared by Claude, Codex and agy.
+    pkgs.playwright-mcp
   ];
 
   xdg.configFile."hunk/config.toml".source = ./config/hunk.toml;
