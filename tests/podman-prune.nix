@@ -57,6 +57,9 @@ pkgs.testers.runNixOSTest {
     build("cache", "localhost/base:1")
     build("held", "localhost/base:1")
     alice("podman create --name holder localhost/held")
+    # Two names, as on an image that is also tagged for a registry.
+    build("pushed", "localhost/base:1")
+    alice("podman tag localhost/pushed registry.example/pushed:1")
     alice("buildah from --name abandoned scratch")
     # What an interrupted build leaves: the mount is gone with the build's
     # namespace, but the container stays marked as mounted.
@@ -70,9 +73,15 @@ pkgs.testers.runNixOSTest {
     before = image_count()
     machine.succeed("systemctl --user --machine=alice@ start podman-prune")
 
-    with subtest("an old image that nothing builds on is removed with its parent"):
+    with subtest("an old image that nothing builds on is removed"):
         assert not exists("image", "localhost/unused")
-        assert image_count() == before - 2, (before, image_count())
+
+    with subtest("an old image with two names is removed"):
+        assert not exists("image", "localhost/pushed")
+        assert not exists("image", "registry.example/pushed:1")
+
+    with subtest("the removed images' parents are removed with them"):
+        assert image_count() == before - 4, (before, image_count())
 
     with subtest("the ancestors of a recent image are kept, however old"):
         assert exists("image", "localhost/recent")

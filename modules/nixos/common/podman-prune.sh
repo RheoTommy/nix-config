@@ -14,20 +14,29 @@ podman ps --all --external --format json |
 # Podman records when an image was created but not when a build last used it.
 # A build that uses an image as cache creates a child of it, so an image counts
 # as used while it has a recent descendant.
-podman images --all --format json |
-  jq -r --argjson cutoff $((now - 72 * 3600)) '
-    unique_by(.Id)
-    | (map({key: .Id, value: .ParentId}) | from_entries) as $parent
-    | def keep($id):
-        if $id == "" or $id == null or .[$id] then .
-        else .[$id] = true | keep($parent[$id]) end;
-      def depth($id):
-        if $id == "" or $parent[$id] == null then 0
-        else 1 + depth($parent[$id]) end;
-    reduce (.[] | select(.Created >= $cutoff or .Containers > 0) | .Id) as $id
-      ({}; keep($id)) as $kept
-    | map(select($kept[.Id] | not) | .Id)
-    # Children first, since Podman refuses to remove an image with children.
-    | sort_by(-depth(.))
-    | .[]' |
+unused=$(
+  podman images --all --format json |
+    jq --argjson cutoff $((now - 72 * 3600)) '
+      unique_by(.Id)
+      | (map({key: .Id, value: .ParentId}) | from_entries) as $parent
+      | def keep($id):
+          if $id == "" or $id == null or .[$id] then .
+          else .[$id] = true | keep($parent[$id]) end;
+        def depth($id):
+          if $id == "" or $parent[$id] == null then 0
+          else 1 + depth($parent[$id]) end;
+      reduce (.[] | select(.Created >= $cutoff or .Containers > 0) | .Id) as $id
+        ({}; keep($id)) as $kept
+      | map(select($kept[.Id] | not))
+      # Children first, since Podman refuses to remove an image with children.
+      | sort_by(-depth(.Id))'
+)
+
+# Podman refuses to remove by ID an image with more than one name, as an image
+# tagged for a registry has. Not rmi --force: it would also remove the
+# containers of a build that started to use the image after the listing above.
+jq -r '.[] | select(.Names | length > 1) | .Id' <<<"$unused" |
+  xargs --no-run-if-empty --max-args=1 podman untag
+
+jq -r '.[].Id' <<<"$unused" |
   xargs --no-run-if-empty podman rmi
