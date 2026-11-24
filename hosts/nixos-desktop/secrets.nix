@@ -28,6 +28,12 @@
       owner = "rheotommy";
     };
   };
+  # The Home Manager modules that read the files above owned by rheotommy.
+  home-manager.users.rheotommy.imports = [
+    ../../home/rheotommy/gws.nix
+    ../../home/rheotommy/agy-keys.nix
+  ];
+
   jobAlerts = {
     environmentFile = config.opSecrets.files.gatus-env.path;
     # A failed run alerts at once, except the very first, when there is no file

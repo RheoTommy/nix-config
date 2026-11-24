@@ -1,5 +1,5 @@
-# The terminal multiplexer that keeps agent sessions alive across disconnects,
-# and Ovis, its web UI.
+# The terminal multiplexer that keeps agent sessions alive across disconnects.
+# Ovis, its web UI, is in ovis.nix.
 {
   inputs,
   lib,
@@ -10,7 +10,6 @@
 let
   inherit (pkgs.stdenv.hostPlatform) system;
   herdr = inputs.llm-agents.packages.${system}.herdr;
-  ovis = inputs.self.packages.${system}.ovis;
   needsAction = inputs.herdr-needs-action.packages.${system}.default;
 in
 {
@@ -64,33 +63,6 @@ in
       # Not control-group: herdr saves the layout on SIGTERM before it hangs
       # up the panes itself.
       KillMode = "mixed";
-      Restart = "on-failure";
-    };
-    Install.WantedBy = [ "default.target" ];
-  };
-
-  systemd.user.services.ovis = {
-    Unit = {
-      Description = "Ovis, the web UI for herdr";
-      # Not BindsTo: Ovis must keep serving a server started by hand, which
-      # makes herdr.service skip its start.
-      Requires = [ "herdr.service" ];
-      After = [ "herdr.service" ];
-    };
-    Service = {
-      ExecStart = lib.getExe ovis;
-      Environment = [
-        "HOST=127.0.0.1"
-        "PORT=7317"
-        "HERDR_SOCKET=%h/.config/herdr/herdr.sock"
-        "OVIS_HERDR_BIN=${lib.getExe herdr}"
-        # The port tailscale-serve-ovis serves on.
-        "OVIS_TAILSCALE_HTTPS_PORT=443"
-        "OVIS_STATE_DIR=%S/ovis"
-        "OVIS_TELEMETRY=0"
-        "OVIS_AUTO_UPDATE=0"
-      ];
-      StateDirectory = "ovis";
       Restart = "on-failure";
     };
     Install.WantedBy = [ "default.target" ];

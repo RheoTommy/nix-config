@@ -1,5 +1,5 @@
 # Boots through lanzaboote so the firmware can verify every boot image against
-# this machine's own Secure Boot keys.
+# the host's own Secure Boot keys.
 {
   inputs,
   pkgs,

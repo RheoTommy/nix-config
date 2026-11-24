@@ -6,6 +6,7 @@
     ./nix.nix
     ./envfs.nix
     ./system.nix
+    ./tailscale.nix
     ./desktop.nix
     ./podman.nix
     ./podman-prune.nix

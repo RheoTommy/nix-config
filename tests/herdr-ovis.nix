@@ -15,7 +15,10 @@ pkgs.testers.runNixOSTest {
       linger = true;
     };
     home-manager.users.alice = {
-      imports = [ ../home/rheotommy/terminal.nix ];
+      imports = [
+        ../home/rheotommy/terminal.nix
+        ../home/rheotommy/ovis.nix
+      ];
       home.stateVersion = "26.05";
     };
 

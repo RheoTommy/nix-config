@@ -51,6 +51,10 @@
   # from a directory instead of asking fontconfig.
   fonts.fontDir.enable = true;
 
+  # Installed for the whole system, so that accounts whose Home Manager setup
+  # lives outside this repository have a browser too.
+  environment.systemPackages = [ pkgs.google-chrome ];
+
   services.printing.enable = true;
 
   # rtkit grants PipeWire audio threads controlled real-time scheduling.

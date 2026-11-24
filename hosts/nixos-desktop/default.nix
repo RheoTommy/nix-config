@@ -10,6 +10,8 @@
     ../../modules/nixos/op-secrets
     ../../modules/nixos/scheduled-jobs
     ../../modules/nixos/remote-access
+    ../../modules/nixos/plasma
+    ../../modules/nixos/secure-boot
     ./backup.nix
     ./disko.nix
     ./golink.nix
@@ -19,23 +21,12 @@
     ./memory-fault-workaround
     ./monitoring.nix
     ./secrets.nix
-    ./secure-boot.nix
   ];
 
   boot.loader.efi.canTouchEfiVariables = true;
   networking.hostName = "nixos-desktop";
 
-  # This host has no swap partition. Compressed in-memory swap gives the kernel
-  # room to reclaim idle pages without a disk-backed swap device. The default
-  # size (50% of RAM) is enough for now.
-  zramSwap.enable = true;
   boot.kernel.sysctl = {
-    # The kernel defaults assume swap on a disk. Swapping to zram costs only
-    # compression, so prefer it over dropping file cache, and read back one page
-    # at a time since readahead saves no seek on memory.
-    "vm.swappiness" = 180;
-    "vm.page-cluster" = 0;
-
     # By default the kernel kills the task that hit an oops and keeps running.
     # That can leave this host half alive and out of reach until someone
     # resets it by hand, so reboot instead. pstore keeps the oops log, which
@@ -53,40 +44,12 @@
     AllowSuspendThenHibernate = false;
   };
 
-  # Enable the NixOS desktop environment, including the Plasma 6 desktop and SDDM display manager.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # KWin must launch Fcitx to pass it the Wayland input-method socket;
-  # the package's generic autostart cannot establish that connection.
-  environment.etc = {
-    "xdg/kwinrc".text = ''
-      [Wayland]
-      InputMethod=/run/current-system/sw/share/applications/org.fcitx.Fcitx5.desktop
-    '';
-    "xdg/autostart/org.fcitx.Fcitx5.desktop".text = ''
-      [Desktop Entry]
-      Hidden=true
-    '';
-    # Baloo indexes the whole home by default, where source trees change far
-    # too often for its index. An allowlist also keeps out directories that
-    # do not exist yet, which an exclude list could not name in advance.
-    "xdg/baloofilerc".text = ''
-      [General]
-      folders[$e]=$HOME/Desktop/,$HOME/Documents/,$HOME/Downloads/,$HOME/Music/,$HOME/Pictures/,$HOME/Videos/
-      only basic indexing=true
-    '';
-  };
-
   # Only the account is declared here. Its home environment is managed by a
   # standalone Home Manager flake kept outside this repository.
   users.users.private = {
     isNormalUser = true;
     shell = pkgs.fish;
   };
-  # A browser for every account on this host, including the one above whose
-  # Home Manager setup lives elsewhere.
-  environment.systemPackages = [ pkgs.google-chrome ];
 
   # Steam brings Proton, which runs Windows games and, through "Add a
   # Non-Steam Game", arbitrary Windows executables. It also enables the 32-bit

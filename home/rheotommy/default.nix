@@ -6,7 +6,6 @@
     ./shell.nix
     ./git.nix
     ./cli.nix
-    ./gws.nix
     ./agents.nix
     ./terminal.nix
     ./resources.nix

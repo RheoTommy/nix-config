@@ -7,11 +7,9 @@ let
 in
 
 {
-  # Remote access goes through the private tailnet. Run `sudo tailscale up` once
-  # after activation to authenticate the host.
-  services.tailscale.enable = true;
-  # Lets Ovis's settings change serve without sudo.
-  services.tailscale.extraSetFlags = [ "--operator=rheotommy" ];
+  # Remote access goes through the private tailnet, which every host joins.
+  # Ovis itself runs as a user service.
+  home-manager.users.rheotommy.imports = [ ../../../home/rheotommy/ovis.nix ];
 
   # Set on every boot rather than once by hand, so tailscaled's serve state
   # follows this file. services.tailscale.serve is for Tailscale Services,
