@@ -16,15 +16,20 @@ configurations through `home-manager.users.<user>`.
 
 ```bash
 nix flake check
-nixos-rebuild build --flake .#nixos-desktop
+nixos-rebuild build --flake .#<host>
 ```
+
+Hosts:
+
+- `nixos-desktop`: the desktop that runs agents and long-running work
+- `nixos-laptop`: a ThinkPad T14s Gen 3 (AMD), a client of the desktop
 
 ## Apply
 
 Apply immediately:
 
 ```bash
-sudo nixos-rebuild switch --flake .#nixos-desktop
+sudo nixos-rebuild switch --flake .#<host>
 ```
 
 Use `boot` instead of `switch` to activate the configuration on the next boot.

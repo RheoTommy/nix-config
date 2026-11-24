@@ -45,22 +45,26 @@
     let
       system = "x86_64-linux";
       pkgs = nixpkgs.legacyPackages.${system};
-      nixosDesktop = nixpkgs.lib.nixosSystem {
-        inherit system;
-        # Expose flake inputs to NixOS modules; the Home Manager integration
-        # module uses this to import its NixOS module.
-        specialArgs = {
-          inherit inputs;
+      # Each host is the directory of the same name under hosts/.
+      mkHost =
+        host:
+        nixpkgs.lib.nixosSystem {
+          inherit system;
+          # Expose flake inputs to NixOS modules; the Home Manager integration
+          # module uses this to import its NixOS module.
+          specialArgs = {
+            inherit inputs;
+          };
+          modules = [
+            ./hosts/${host}
+          ];
         };
-        modules = [
-          ./hosts/nixos-desktop
-        ];
-      };
     in
     {
-      nixosConfigurations = {
-        nixos-desktop = nixosDesktop;
-      };
+      nixosConfigurations = nixpkgs.lib.genAttrs [
+        "nixos-desktop"
+        "nixos-laptop"
+      ] mkHost;
 
       packages.${system} = {
         # Exposed so the package can be built, and updated with nix-update, on

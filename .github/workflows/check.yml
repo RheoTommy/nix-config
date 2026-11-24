@@ -21,12 +21,17 @@ jobs:
       - uses: ./.github/actions/setup-nix
       - run: nix flake check -L
 
-  nixos-desktop:
+  nixos:
+    strategy:
+      # A failure on one host says nothing about the other.
+      fail-fast: false
+      matrix:
+        host: [nixos-desktop, nixos-laptop]
     runs-on: ubuntu-latest
     steps:
-      # The closure, over 20 GiB, does not fit in the free space of / alone.
-      # Carve rather than the default cleave: joining / and /mnt is enough, and
-      # nothing needs purging.
+      # The desktop's closure, over 20 GiB, does not fit in the free space of /
+      # alone. Carve rather than the default cleave: joining / and /mnt is
+      # enough, and nothing needs purging.
       - uses: wimpysworld/nothing-but-nix@b2574ec1cf1462bee0a34de0fb6ff11ad3c43cb2 # v12
         with:
           hatchet-protocol: carve
@@ -34,4 +39,4 @@ jobs:
       - uses: ./.github/actions/setup-nix
         with:
           build-dir: /nix/build
-      - run: nix build -L --no-link .#nixosConfigurations.nixos-desktop.config.system.build.toplevel
+      - run: nix build -L --no-link .#nixosConfigurations.${{ matrix.host }}.config.system.build.toplevel
